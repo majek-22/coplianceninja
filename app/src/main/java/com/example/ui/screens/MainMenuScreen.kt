@@ -1,0 +1,569 @@
+package com.example.ui.screens
+
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.VolumeOff
+import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.R
+import com.example.ui.theme.BackgroundDark
+import com.example.ui.theme.BackgroundGradientEnd
+import com.example.ui.theme.CoralPrimary
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import com.example.data.AvatarHelper
+import com.example.ui.theme.GoldSecondary
+import com.example.ui.theme.MintSuccess
+import com.example.ui.theme.TextPrimary
+
+@Composable
+fun MainMenuScreen(
+    currentUser: String?,
+    userAvatarId: Int = 1,
+    highScore: Int,
+    currentLanguage: String,
+    isAudioMuted: Boolean,
+    onStartShift: () -> Unit,
+    onOpenLeaderboard: () -> Unit,
+    onOpenGlossary: () -> Unit,
+    onOpenProfile: () -> Unit = {},
+    onToggleLanguage: () -> Unit,
+    onToggleAudioMute: () -> Unit,
+    onLogout: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "menu_anim")
+    val floatingOffset by infiniteTransition.animateFloat(
+        initialValue = -4f,
+        targetValue = 4f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "floating_title"
+    )
+
+    val pulseScale by infiniteTransition.animateFloat(
+        initialValue = 1.0f,
+        targetValue = 1.025f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulse_button"
+    )
+
+    BoxWithConstraints(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(BackgroundDark, BackgroundGradientEnd, Color(0xFF0F172A))
+                )
+            )
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(horizontal = 24.dp, vertical = 12.dp)
+    ) {
+        val isLandscape = maxWidth > maxHeight
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Top Bar: Officer info (opens Profile), Language toggle, Audio mute, Logout
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Officer badge with avatar, clickable to open Profile
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color(0x33FFFFFF),
+                    border = BorderStroke(1.dp, Color(0x3364B5F6)),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { onOpenProfile() }
+                        .testTag("menu_profile_btn")
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val avatarRes = AvatarHelper.getAvatarRes(userAvatarId, currentUser ?: "")
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                                .background(Color(0x3364B5F6))
+                                .border(1.dp, GoldSecondary, CircleShape)
+                                .padding(2.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = avatarRes),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = currentUser ?: "Officer",
+                            color = Color.White,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                // Controls group: neat ~28dp containers within minimum 48dp touch targets
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Language toggle
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(onClick = onToggleLanguage)
+                            .testTag("menu_lang_btn"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(Color(0x22FFFFFF))
+                                .border(1.dp, GoldSecondary.copy(alpha = 0.5f), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Crossfade(
+                                targetState = currentLanguage,
+                                animationSpec = tween(250),
+                                label = "language_toggle_crossfade"
+                            ) { lang ->
+                                Text(
+                                    text = if (lang == "in") "ID" else "EN",
+                                    color = GoldSecondary,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Black
+                                )
+                            }
+                        }
+                    }
+
+                    // Audio mute toggle
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(onClick = onToggleAudioMute)
+                            .testTag("menu_audio_mute_btn"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(Color(0x22FFFFFF))
+                                .border(
+                                    1.dp,
+                                    if (isAudioMuted) Color(0x55FF5252) else Color(0x554FCB8F),
+                                    CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = if (isAudioMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
+                                contentDescription = "Mute",
+                                tint = if (isAudioMuted) Color(0xFFFF5252) else MintSuccess,
+                                modifier = Modifier.size(15.dp)
+                            )
+                        }
+                    }
+
+                    // Logout button
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(onClick = onLogout)
+                            .testTag("menu_logout_btn"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(Color(0x22FF5252))
+                                .border(1.dp, Color(0x44FF5252), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                                contentDescription = stringResource(R.string.auth_logout),
+                                tint = Color(0xFFFF8A80),
+                                modifier = Modifier.size(15.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Main Body Content
+            if (isLandscape) {
+                // Landscape split: Left = Title & Badges, Right = Action Buttons
+                Row(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(28.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Left Column: Branding, High Score, Icon showcase
+                    Column(
+                        modifier = Modifier
+                            .weight(1.1f)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0x22FFC857),
+                            border = BorderStroke(1.dp, Color(0x66FFC857)),
+                            modifier = Modifier.padding(bottom = 6.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.menu_subtitle).uppercase(),
+                                color = GoldSecondary,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 1.4.sp,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            )
+                        }
+
+                        Text(
+                            text = stringResource(R.string.menu_title),
+                            style = MaterialTheme.typography.displayLarge.copy(
+                                fontSize = 28.sp,
+                                lineHeight = 32.sp
+                            ),
+                            color = TextPrimary,
+                            fontWeight = FontWeight.Black,
+                            modifier = Modifier.graphicsLayer { translationY = floatingOffset }
+                        )
+
+                        // Real Persisted High Score Ribbon
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(top = 10.dp, bottom = 12.dp)
+                                .background(Color(0x33FFFFFF), RoundedCornerShape(12.dp))
+                                .border(1.dp, Color(0x22FFFFFF), RoundedCornerShape(12.dp))
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                tint = GoldSecondary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(R.string.menu_high_score_label).uppercase(),
+                                color = Color(0xFFB0BEC5),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = String.format("%06d", highScore),
+                                color = GoldSecondary,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Black
+                            )
+                        }
+
+                        // Category preview icons row
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconBadgePreview(
+                                iconRes = R.drawable.ic_item_bribery,
+                                label = stringResource(R.string.category_violation).uppercase(),
+                                color = Color(0xFFFFC857)
+                            )
+                            IconBadgePreview(
+                                iconRes = R.drawable.ic_item_false_alarm,
+                                label = stringResource(R.string.category_trap).uppercase(),
+                                color = Color(0xFFFF7043)
+                            )
+                            IconBadgePreview(
+                                iconRes = R.drawable.ic_item_shield_bonus,
+                                label = stringResource(R.string.category_bonus).uppercase(),
+                                color = Color(0xFF00E5FF)
+                            )
+                            IconBadgePreview(
+                                iconRes = R.drawable.ic_item_official_doc,
+                                label = stringResource(R.string.category_legit).uppercase(),
+                                color = Color(0xFF64B5F6)
+                            )
+                        }
+                    }
+
+                    // Right Column: Action Buttons
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // 1. Start Investigation (Missions)
+                        Button(
+                            onClick = onStartShift,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(54.dp)
+                                .scale(pulseScale)
+                                .testTag("start_shift_button"),
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                            contentPadding = PaddingValues(),
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        Brush.horizontalGradient(listOf(CoralPrimary, GoldSecondary)),
+                                        RoundedCornerShape(14.dp)
+                                    )
+                                    .padding(horizontal = 16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.PlayArrow,
+                                        contentDescription = null,
+                                        tint = BackgroundDark,
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.menu_start_shift).uppercase(),
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Black,
+                                        color = BackgroundDark,
+                                        letterSpacing = 0.5.sp
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                        contentDescription = null,
+                                        tint = BackgroundDark,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // 2. Global Leaderboard & Stats
+                        OutlinedButton(
+                            onClick = onOpenLeaderboard,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp)
+                                .testTag("menu_leaderboard_btn"),
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.2.dp, Color(0xFFFFD54F)),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = Color(0x221E3A5F),
+                                contentColor = Color(0xFFFFD54F)
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.EmojiEvents,
+                                contentDescription = null,
+                                tint = Color(0xFFFFD54F),
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.menu_leaderboard).uppercase(),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 13.sp
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // 3. Icon Glossary / How to Play
+                        OutlinedButton(
+                            onClick = onOpenGlossary,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp)
+                                .testTag("menu_glossary_btn"),
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.2.dp, Color(0xFF64B5F6)),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = Color(0x221E3A5F),
+                                contentColor = Color(0xFF90CAF9)
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Book,
+                                contentDescription = null,
+                                tint = Color(0xFF64B5F6),
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.menu_glossary).uppercase(),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 13.sp
+                            )
+                        }
+                    }
+                }
+            } else {
+                // Portrait fallback
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.menu_title),
+                        style = MaterialTheme.typography.displayLarge.copy(fontSize = 32.sp),
+                        color = TextPrimary,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Black
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = onStartShift,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .testTag("start_shift_button")
+                    ) {
+                        Text(text = stringResource(R.string.menu_start_shift).uppercase())
+                    }
+                }
+            }
+
+            // Bottom subtle footer
+            Text(
+                text = stringResource(R.string.menu_footer_features),
+                color = Color(0xFF78909C),
+                fontSize = 11.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun IconBadgePreview(
+    iconRes: Int,
+    label: String,
+    color: Color
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(color.copy(alpha = 0.18f))
+                .border(1.2.dp, color, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = label,
+                tint = color,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(3.dp))
+        Text(
+            text = label,
+            color = color,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Black
+        )
+    }
+}
