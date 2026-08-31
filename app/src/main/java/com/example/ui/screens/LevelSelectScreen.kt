@@ -88,6 +88,7 @@ import com.example.data.LevelConfig
 import com.example.data.local.UserStats
 import com.example.ui.theme.BackgroundDark
 import com.example.ui.theme.BackgroundGradientEnd
+import com.example.ui.theme.BrandPrimary
 import com.example.ui.theme.CoralPrimary
 import com.example.ui.theme.GoldSecondary
 import com.example.ui.theme.MintSuccess
@@ -157,11 +158,7 @@ fun LevelSelectScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(BackgroundDark, BackgroundGradientEnd, Color(0xFF0D1424))
-                )
-            )
+            .background(BrandPrimary)
             .statusBarsPadding()
             .navigationBarsPadding()
             .padding(horizontal = 16.dp, vertical = 10.dp)
@@ -251,38 +248,6 @@ fun LevelSelectScreen(
                         contentDescription = stringResource(R.string.menu_glossary),
                         tint = GoldSecondary,
                         modifier = Modifier.size(18.dp)
-                    )
-                }
-            }
-
-            // Slice to Deploy Banner
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0x22F27D6B),
-                border = BorderStroke(1.dp, CoralPrimary.copy(alpha = 0.4f))
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_knife_slice),
-                        contentDescription = null,
-                        tint = CoralPrimary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.level_slice_to_deploy),
-                        color = TextPrimary,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }

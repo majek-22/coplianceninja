@@ -150,7 +150,7 @@
     <string name="audio_unmute">Unmute Audio</string>
 
     <!-- Level Select & Difficulty -->
-    <string name="level_select_title">Mission Roster</string>
+    <string name="level_select_title">Mission</string>
     <string name="level_select_subtitle">Select Investigation Tier</string>
     <string name="level_slice_hint">Swipe across icon to deploy!</string>
     <string name="level_locked_notice">Locked: Clear previous tier to unlock</string>

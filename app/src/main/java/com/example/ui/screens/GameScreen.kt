@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Timer
@@ -85,11 +86,13 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -104,6 +107,7 @@ import com.example.data.GameItem
 import com.example.data.SliceTrailPoint
 import com.example.ui.theme.BackgroundDark
 import com.example.ui.theme.BackgroundGradientEnd
+import com.example.ui.theme.BrandPrimary
 import com.example.ui.theme.CardLegitimateEnd
 import com.example.ui.theme.CardLegitimateStart
 import com.example.ui.theme.CardViolationEnd
@@ -143,7 +147,7 @@ fun GameScreen(
     onReturnToMenu: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val iconPainters = rememberVectorPainters()
+    val iconPainters = rememberCategoryPainters()
     val sliceTrail = remember { mutableStateListOf<SliceTrailPoint>() }
 
     val context = LocalContext.current
@@ -207,11 +211,7 @@ fun GameScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(BackgroundDark, BackgroundGradientEnd, Color(0xFF130924))
-                )
-            )
+            .background(BrandPrimary)
             .offset { IntOffset(shakeOffsetX, shakeOffsetY) }
     ) {
         val density = LocalDensity.current
@@ -334,10 +334,43 @@ fun GameScreen(
             elapsedSeconds = uiState.timeRemaining,
             isAudioMuted = uiState.isAudioMuted,
             onToggleAudioMute = { viewModel.toggleAudioMute() },
+            isPaused = uiState.isPaused,
+            onTogglePause = { if (uiState.isPaused) viewModel.resumeGame() else viewModel.pauseGame() },
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
         )
+
+        // Pause overlay dialog
+        if (uiState.isPaused) {
+            AlertDialog(
+                onDismissRequest = { viewModel.resumeGame() },
+                title = {
+                    Text(
+                        text = stringResource(R.string.dialog_paused_title),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    Text(text = stringResource(R.string.menu_subtitle))
+                },
+                confirmButton = {
+                    Button(
+                        onClick = { viewModel.resumeGame() },
+                        colors = ButtonDefaults.buttonColors(containerColor = CoralPrimary)
+                    ) {
+                        Text(stringResource(R.string.dialog_resume))
+                    }
+                },
+                dismissButton = {
+                    OutlinedButton(
+                        onClick = onReturnToMenu
+                    ) {
+                        Text(stringResource(R.string.dialog_quit_to_menu))
+                    }
+                }
+            )
+        }
 
         // 3. SLICE ALERT / FEEDBACK BANNER
         AnimatedVisibility(
@@ -425,7 +458,7 @@ private fun DrawScope.drawAmbientGrid(size: Size) {
 @Composable
 private fun FlyingItemComposable(
     item: GameItem,
-    painter: androidx.compose.ui.graphics.vector.VectorPainter?,
+    painter: Painter?,
     modifier: Modifier = Modifier
 ) {
     if (painter == null) return
@@ -595,7 +628,7 @@ private fun FlyingItemComposable(
 
 private fun DrawScope.drawSlicedHalves(
     item: GameItem,
-    painter: androidx.compose.ui.graphics.vector.VectorPainter
+    painter: Painter
 ) {
     val rad = item.sliceAngle * (PI.toFloat() / 180f)
     val dirX = cos(rad)
@@ -647,7 +680,7 @@ private fun DrawScope.drawSlicedHalf(
     rotation: Float,
     radius: Float,
     alpha: Float,
-    painter: androidx.compose.ui.graphics.vector.VectorPainter,
+    painter: Painter,
     category: ComplianceCategory,
     isFirstHalf: Boolean,
     sliceAngle: Float,
@@ -785,6 +818,8 @@ private fun TopHudBar(
     elapsedSeconds: Float,
     isAudioMuted: Boolean,
     onToggleAudioMute: () -> Unit,
+    isPaused: Boolean,
+    onTogglePause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Single flat, uniform solid background color from top to bottom — no gradation
@@ -893,7 +928,7 @@ private fun TopHudBar(
                     }
                 }
 
-                // 2. Volume Mute Toggle (small ~24dp button to the left of lives)
+                // 2. Volume Mute Toggle (compact 24dp button to the left of lives)
                 IconButton(
                     onClick = onToggleAudioMute,
                     modifier = Modifier
@@ -907,6 +942,24 @@ private fun TopHudBar(
                         imageVector = if (isAudioMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
                         contentDescription = "Mute",
                         tint = if (isAudioMuted) Color(0xFFFF5252) else MintSuccess,
+                        modifier = Modifier.size(13.dp)
+                    )
+                }
+
+                // Pause toggle (compact 24dp button matching volume button)
+                IconButton(
+                    onClick = onTogglePause,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(Color(0x22FFFFFF))
+                        .border(1.dp, Color(0x3364B5F6), CircleShape)
+                        .testTag("hud_pause_btn")
+                ) {
+                    Icon(
+                        imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
+                        contentDescription = "Pause",
+                        tint = Color(0xFF90CAF9),
                         modifier = Modifier.size(13.dp)
                     )
                 }
@@ -956,15 +1009,14 @@ private fun TopHudBar(
 }
 
 // =========================================================================
-// VECTOR PAINTERS CACHE
+// CATEGORY PAINTERS CACHE
 // =========================================================================
 
 @Composable
-private fun rememberVectorPainters(): Map<ComplianceCategory, androidx.compose.ui.graphics.vector.VectorPainter> {
-    val painters = mutableMapOf<ComplianceCategory, androidx.compose.ui.graphics.vector.VectorPainter>()
+private fun rememberCategoryPainters(): Map<ComplianceCategory, Painter> {
+    val painters = mutableMapOf<ComplianceCategory, Painter>()
     for (category in ComplianceCategory.entries) {
-        val vector = ImageVector.vectorResource(id = category.iconRes)
-        painters[category] = rememberVectorPainter(image = vector)
+        painters[category] = painterResource(id = category.iconRes)
     }
     return painters
 }

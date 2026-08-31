@@ -150,7 +150,7 @@
     <string name="audio_unmute">Bunyikan Audio</string>
 
     <!-- Level Select & Difficulty -->
-    <string name="level_select_title">Daftar Misi</string>
+    <string name="level_select_title">Misi</string>
     <string name="level_select_subtitle">Pilih Tingkat Investigasi</string>
     <string name="level_slice_hint">Tebas ikon untuk bertugas!</string>
     <string name="level_locked_notice">Terkunci: Selesaikan misi sebelumnya untuk membuka</string>

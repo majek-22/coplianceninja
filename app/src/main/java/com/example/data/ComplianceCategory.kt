@@ -33,7 +33,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 10,
         explanationRes = R.string.exp_bribery,
-        iconRes = R.drawable.ic_item_bribery,
+        iconRes = R.drawable.bribery,
         badgeColor = 0xFFD97706,
         borderColor = 0xFFF59E0B
     ),
@@ -43,7 +43,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 10,
         explanationRes = R.string.exp_fraud,
-        iconRes = R.drawable.ic_item_fraud,
+        iconRes = R.drawable.fraud,
         badgeColor = 0xFFEA580C,
         borderColor = 0xFFFB923C
     ),
@@ -53,7 +53,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 10,
         explanationRes = R.string.exp_money_laundering,
-        iconRes = R.drawable.ic_item_money_laundering,
+        iconRes = R.drawable.money_laundering,
         badgeColor = 0xFFC2410C,
         borderColor = 0xFFF97316
     ),
@@ -63,7 +63,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 10,
         explanationRes = R.string.exp_data_breach,
-        iconRes = R.drawable.ic_item_data_breach,
+        iconRes = R.drawable.data_breach,
         badgeColor = 0xFFBE185D,
         borderColor = 0xFFF472B6
     ),
@@ -73,7 +73,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 25, // High-value rare violation
         explanationRes = R.string.exp_systemic_corruption,
-        iconRes = R.drawable.ic_item_systemic_corruption,
+        iconRes = R.drawable.systemic_corruption,
         badgeColor = 0xFF6D28D9,
         borderColor = 0xFFA78BFA
     ),
@@ -83,7 +83,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 15,
         explanationRes = R.string.exp_insider_trading,
-        iconRes = R.drawable.ic_item_insider_trading,
+        iconRes = R.drawable.fraud,
         badgeColor = 0xFFB45309,
         borderColor = 0xFFFBBF24
     ),
@@ -93,7 +93,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 15,
         explanationRes = R.string.exp_conflict_of_interest,
-        iconRes = R.drawable.ic_item_conflict_of_interest,
+        iconRes = R.drawable.bribery,
         badgeColor = 0xFF9A3412,
         borderColor = 0xFFFB923C
     ),
@@ -103,7 +103,7 @@ enum class ComplianceCategory(
         isViolation = true,
         basePoints = 20,
         explanationRes = R.string.exp_embezzlement,
-        iconRes = R.drawable.ic_item_embezzlement,
+        iconRes = R.drawable.money_laundering,
         badgeColor = 0xFF9F1239,
         borderColor = 0xFFFB7185
     ),
@@ -117,7 +117,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_official_document,
-        iconRes = R.drawable.ic_item_official_doc,
+        iconRes = R.drawable.official_document,
         badgeColor = 0xFF1D4ED8,
         borderColor = 0xFF60A5FA
     ),
@@ -127,7 +127,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_verified_approval,
-        iconRes = R.drawable.ic_item_verified_approval,
+        iconRes = R.drawable.verified_approval,
         badgeColor = 0xFF0284C7,
         borderColor = 0xFF38BDF8
     ),
@@ -137,7 +137,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_valid_partnership,
-        iconRes = R.drawable.ic_item_valid_partnership,
+        iconRes = R.drawable.valid_partnership,
         badgeColor = 0xFF0E7490,
         borderColor = 0xFF22D3EE
     ),
@@ -147,7 +147,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_certification,
-        iconRes = R.drawable.ic_item_certification,
+        iconRes = R.drawable.certification,
         badgeColor = 0xFF2563EB,
         borderColor = 0xFF93C5FD
     ),
@@ -157,7 +157,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_verified_invoice,
-        iconRes = R.drawable.ic_item_verified_invoice,
+        iconRes = R.drawable.verified_invoice,
         badgeColor = 0xFF0369A1,
         borderColor = 0xFF7DD3FC
     ),
@@ -167,7 +167,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_compliance_audit,
-        iconRes = R.drawable.ic_item_compliance_audit,
+        iconRes = R.drawable.official_document,
         badgeColor = 0xFF1E40AF,
         borderColor = 0xFF93C5FD
     ),
@@ -177,7 +177,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_ethics_training,
-        iconRes = R.drawable.ic_item_ethics_training,
+        iconRes = R.drawable.certification,
         badgeColor = 0xFF1E3A8A,
         borderColor = 0xFF60A5FA
     ),
@@ -187,7 +187,7 @@ enum class ComplianceCategory(
         isViolation = false,
         basePoints = 0,
         explanationRes = R.string.exp_transparency_report,
-        iconRes = R.drawable.ic_item_transparency_report,
+        iconRes = R.drawable.verified_approval,
         badgeColor = 0xFF075985,
         borderColor = 0xFF38BDF8
     ),
@@ -202,7 +202,7 @@ enum class ComplianceCategory(
         isTrap = true,
         basePoints = 0,
         explanationRes = R.string.exp_false_alarm,
-        iconRes = R.drawable.ic_item_false_alarm,
+        iconRes = R.drawable.false_alarm,
         badgeColor = 0xFF7E22CE,
         borderColor = 0xFFC084FC
     ),
@@ -213,7 +213,7 @@ enum class ComplianceCategory(
         isTrap = true,
         basePoints = 0,
         explanationRes = R.string.exp_unverified_rumor,
-        iconRes = R.drawable.ic_item_unverified_rumor,
+        iconRes = R.drawable.unverified_rumor,
         badgeColor = 0xFF6B21A8,
         borderColor = 0xFFA855F7
     ),
@@ -224,7 +224,7 @@ enum class ComplianceCategory(
         isTrap = true,
         basePoints = 0,
         explanationRes = R.string.exp_honest_mistake,
-        iconRes = R.drawable.ic_item_honest_mistake,
+        iconRes = R.drawable.honest_mistake,
         badgeColor = 0xFF86198F,
         borderColor = 0xFFE879F9
     ),
@@ -235,7 +235,7 @@ enum class ComplianceCategory(
         isTrap = true,
         basePoints = 0,
         explanationRes = R.string.exp_phishing_bait,
-        iconRes = R.drawable.ic_item_phishing_bait,
+        iconRes = R.drawable.data_breach,
         badgeColor = 0xFF581C87,
         borderColor = 0xFFD8B4FE
     ),
@@ -246,7 +246,7 @@ enum class ComplianceCategory(
         isTrap = true,
         basePoints = 0,
         explanationRes = R.string.exp_misfiled_memo,
-        iconRes = R.drawable.ic_item_misfiled_memo,
+        iconRes = R.drawable.honest_mistake,
         badgeColor = 0xFF701A75,
         borderColor = 0xFFF0ABFC
     ),
@@ -261,7 +261,7 @@ enum class ComplianceCategory(
         isBonus = true,
         basePoints = 25,
         explanationRes = R.string.exp_shield,
-        iconRes = R.drawable.ic_item_shield_bonus,
+        iconRes = R.drawable.compliance_shield,
         badgeColor = 0xFFCA8A04,
         borderColor = 0xFFFDE047
     ),
@@ -272,7 +272,7 @@ enum class ComplianceCategory(
         isBonus = true,
         basePoints = 25,
         explanationRes = R.string.exp_whistleblower,
-        iconRes = R.drawable.ic_item_whistleblower,
+        iconRes = R.drawable.bonus_shield,
         badgeColor = 0xFFD97706,
         borderColor = 0xFFFEF08A
     ),
@@ -283,7 +283,7 @@ enum class ComplianceCategory(
         isBonus = true,
         basePoints = 30,
         explanationRes = R.string.exp_star_auditor,
-        iconRes = R.drawable.ic_item_star_auditor,
+        iconRes = R.drawable.bonus_shield,
         badgeColor = 0xFFB45309,
         borderColor = 0xFFFACC15
     );

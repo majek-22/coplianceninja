@@ -2,12 +2,16 @@ package com.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Sunset Arcade & Immersive UI Palette
-val BackgroundDark = Color(0xFF1B1033)
-val BackgroundGradientEnd = Color(0xFF2A1B4A)
-val SurfaceDark = Color(0xFF231742)
-val SurfaceElevated = Color(0xFF2F1F54)
-val SurfaceBorder = Color(0xFF4A347D)
+// Official Brand Colors (Prompt #10 & #11)
+val BrandPrimary = Color(0xFF00A6E9) // RGB(0, 166, 233) — bright sky blue
+val BrandSub = Color(0xFFBC851C)     // RGB(188, 133, 28) — warm bronze/gold
+
+// Screen & Immersive UI Palette
+val BackgroundDark = BrandPrimary
+val BackgroundGradientEnd = BrandPrimary
+val SurfaceDark = Color(0xFF1E293B) // Dark charcoal/navy surface for high contrast
+val SurfaceElevated = Color(0xFF273549)
+val SurfaceBorder = Color(0xFF3B4D66)
 
 val CoralPrimary = Color(0xFFFF6B5B) // Slice trail, Primary CTA
 val GoldSecondary = Color(0xFFFFC857) // Score, Combo, High achievement
