@@ -16,6 +16,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -28,6 +31,7 @@ import com.example.ui.screens.LevelSelectScreen
 import com.example.ui.screens.LoginRegisterScreen
 import com.example.ui.screens.MainMenuScreen
 import com.example.ui.screens.ResultScreen
+import com.example.ui.screens.SplashScreen
 import com.example.ui.theme.BackgroundDark
 import com.example.ui.theme.ComplianceSlicerTheme
 import com.example.ui.viewmodel.GamePhase
@@ -37,6 +41,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        hideSystemNavigationBar()
+        window.decorView.post {
+            hideSystemNavigationBar()
+        }
         setContent {
             ComplianceSlicerTheme {
                 Surface(
@@ -48,6 +56,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        hideSystemNavigationBar()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemNavigationBar()
+        }
+    }
+
+    fun hideSystemNavigationBar() {
+        val window = window ?: return
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        insetsController.hide(WindowInsetsCompat.Type.navigationBars())
+    }
 }
 
 @Composable
@@ -58,7 +87,12 @@ fun ComplianceSlicerApp(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
-    val activity = context as? Activity
+    val activity = context as? MainActivity
+
+    // Hide navigation bar on phase changes
+    LaunchedEffect(uiState.phase) {
+        activity?.hideSystemNavigationBar()
+    }
 
     // Background music lifecycle & screen transition management
     LaunchedEffect(uiState.phase, uiState.isAudioMuted) {
@@ -68,7 +102,7 @@ fun ComplianceSlicerApp(
             viewModel.musicManager.setMuted(false)
             when (uiState.phase) {
                 GamePhase.PLAYING -> viewModel.musicManager.playGameplayTrack()
-                GamePhase.MENU, GamePhase.LEVEL_SELECT, GamePhase.GLOSSARY,
+                GamePhase.SPLASH, GamePhase.MENU, GamePhase.LEVEL_SELECT, GamePhase.GLOSSARY,
                 GamePhase.LEADERBOARD, GamePhase.PROFILE, GamePhase.RESULT, GamePhase.LOGIN_REGISTER -> {
                     viewModel.musicManager.playMenuTrack()
                 }
@@ -84,10 +118,11 @@ fun ComplianceSlicerApp(
                     viewModel.musicManager.pause()
                 }
                 Lifecycle.Event.ON_RESUME -> {
+                    activity?.hideSystemNavigationBar()
                     if (!uiState.isAudioMuted) {
                         when (uiState.phase) {
                             GamePhase.PLAYING -> viewModel.musicManager.playGameplayTrack()
-                            GamePhase.MENU, GamePhase.LEVEL_SELECT, GamePhase.GLOSSARY,
+                            GamePhase.SPLASH, GamePhase.MENU, GamePhase.LEVEL_SELECT, GamePhase.GLOSSARY,
                             GamePhase.LEADERBOARD, GamePhase.PROFILE, GamePhase.RESULT, GamePhase.LOGIN_REGISTER -> {
                                 viewModel.musicManager.playMenuTrack()
                             }
@@ -110,6 +145,12 @@ fun ComplianceSlicerApp(
         modifier = modifier.fillMaxSize()
     ) { phase ->
         when (phase) {
+            GamePhase.SPLASH -> {
+                SplashScreen(
+                    onSplashFinished = { viewModel.onSplashFinished() }
+                )
+            }
+
             GamePhase.LOGIN_REGISTER -> {
                 LoginRegisterScreen(
                     currentLanguage = uiState.currentLanguage,

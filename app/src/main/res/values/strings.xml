@@ -297,4 +297,6 @@
     <string name="level_unlock_requirement">Complete Mission %1$d to unlock</string>
     <string name="level_unlock_short">Mission %1$d ★1</string>
     <string name="menu_footer_features">Score-Based Difficulty • Combos up to 4x • Cloud Sync</string>
+    <string name="splash_tap_to_skip">Tap anywhere to continue</string>
+    <string name="splash_content_desc">Bang Patuh Compliance Ninja Flash Screen</string>
 </resources>

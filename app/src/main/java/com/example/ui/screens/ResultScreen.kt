@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,12 +43,18 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -93,20 +100,37 @@ fun ResultScreen(
     onReturnToMenu: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val window = (context as? Activity)?.window
+
+    DisposableEffect(window) {
+        if (window != null) {
+            val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+            insetsController.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            insetsController.hide(WindowInsetsCompat.Type.navigationBars())
+            onDispose { }
+        } else {
+            onDispose { }
+        }
+    }
+
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(BackgroundDark, BackgroundGradientEnd, Color(0xFF150A28))
-                )
-            )
+        modifier = modifier.fillMaxSize()
     ) {
-        // Dimmed overlay
+        // Fullscreen Background Artwork
+        Image(
+            painter = painterResource(id = R.drawable.bg_gameplay_screen),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        // Semi-transparent overlay to ensure contrast and readability while showcasing background art
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.45f))
+                .background(Color.Black.copy(alpha = 0.35f))
         )
 
         Surface(
@@ -114,11 +138,11 @@ fun ResultScreen(
                 .fillMaxSize()
                 .statusBarsPadding()
                 .navigationBarsPadding()
-                .padding(top = 10.dp, start = 12.dp, end = 12.dp, bottom = 10.dp),
-            shape = RoundedCornerShape(24.dp),
-            color = SheetContainerBg,
-            border = BorderStroke(1.dp, SheetBorderTop),
-            shadowElevation = 24.dp
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+            shape = RoundedCornerShape(20.dp),
+            color = Color(0xC50B132B),
+            border = BorderStroke(1.dp, Color(0x4064B5F6)),
+            shadowElevation = 16.dp
         ) {
             BoxWithConstraints(
                 modifier = Modifier

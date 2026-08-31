@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -54,7 +55,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -304,21 +307,17 @@ fun LoginRegisterScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(72.dp)
+                        .size(68.dp)
                         .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(Color(0xFFFFD54F), Color(0xFFD4AF37), Color(0xFF8C6D1F))
-                            )
-                        )
-                        .border(2.dp, Color(0xFFFFF9C4), CircleShape),
+                        .background(Color(0xFF0097D4))
+                        .border(2.dp, Color(0xFFFFD54F), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = null,
-                        tint = Color(0xFF0D1B2A),
-                        modifier = Modifier.size(42.dp)
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_mascot_art),
+                        contentDescription = "Compliance Ninja Logo",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
 

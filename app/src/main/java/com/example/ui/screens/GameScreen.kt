@@ -16,6 +16,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -90,6 +91,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -162,7 +164,7 @@ fun GameScreen(
             insetsController.hide(WindowInsetsCompat.Type.systemBars())
 
             onDispose {
-                insetsController.show(WindowInsetsCompat.Type.systemBars())
+                insetsController.hide(WindowInsetsCompat.Type.navigationBars())
             }
         } else {
             onDispose { }
@@ -211,7 +213,6 @@ fun GameScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(BrandPrimary)
             .offset { IntOffset(shakeOffsetX, shakeOffsetY) }
     ) {
         val density = LocalDensity.current
@@ -222,12 +223,17 @@ fun GameScreen(
             viewModel.setScreenDimensions(widthPx, heightPx)
         }
 
-        // 1. BACKGROUND & AMBIENT GRID CANVAS
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawAmbientGrid(size)
+        // 1. FULLSCREEN GAMEPLAY BACKGROUND IMAGE
+        Image(
+            painter = painterResource(id = R.drawable.bg_gameplay_screen),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-            // Safe-Zone Debug Overlay (Feature 3)
-            if (uiState.debugOverlayEnabled) {
+        // Safe-Zone Debug Overlay (Feature 3)
+        if (uiState.debugOverlayEnabled) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
                 val left = viewModel.engine.safeZoneLeft
                 val right = viewModel.engine.safeZoneRight
                 val top = viewModel.engine.safeZoneTop
@@ -429,31 +435,6 @@ fun GameScreen(
 // =========================================================================
 // CANVAS RENDERING HELPERS
 // =========================================================================
-
-private fun DrawScope.drawAmbientGrid(size: Size) {
-    drawRect(
-        brush = Brush.radialGradient(
-            colors = listOf(CoralPrimary.copy(alpha = 0.09f), Color.Transparent),
-            center = Offset(size.width * 0.5f, size.height * 0.4f),
-            radius = size.width * 0.75f
-        )
-    )
-
-    val step = 140f
-    var x = 40f
-    while (x < size.width) {
-        var y = 40f
-        while (y < size.height) {
-            drawCircle(
-                color = SurfaceBorder.copy(alpha = 0.25f),
-                radius = 1.5f,
-                center = Offset(x, y)
-            )
-            y += step
-        }
-        x += step
-    }
-}
 
 @Composable
 private fun FlyingItemComposable(
@@ -822,60 +803,66 @@ private fun TopHudBar(
     onTogglePause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Single flat, uniform solid background color from top to bottom — no gradation
-    Surface(
-        color = Color(0xFF0F172A),
-        border = BorderStroke(1.dp, Color(0x3364B5F6)),
-        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
+    // Borderless floating HUD container over the full-screen scenery without any black bar or top strip
+    Box(
         modifier = modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
+            .padding(horizontal = 14.dp, vertical = 6.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(horizontal = 14.dp, vertical = 6.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Left: Score and Combo Badge
+            // Left: Score and Combo Badge in floating translucent glass pill
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0x44000000),
+                    border = BorderStroke(1.dp, Color(0x33FFFFFF))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color(0x3364B5F6))
+                                .background(Color(0x4464B5F6))
                                 .padding(horizontal = 5.dp, vertical = 1.dp)
                         ) {
                             Text(
                                 text = "M$levelNumber",
-                                color = Color(0xFF64B5F6),
+                                color = Color(0xFF90CAF9),
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Black
                             )
                         }
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = stringResource(R.string.hud_score_label).uppercase(),
-                            style = HudLabelStyle,
-                            color = TextSecondary
-                        )
+                        Column {
+                            Text(
+                                text = stringResource(R.string.hud_score_label).uppercase(),
+                                style = HudLabelStyle,
+                                color = Color(0xCCFFFFFF)
+                            )
+                            Text(
+                                text = String.format("%06d", score),
+                                style = HudScoreDigitsStyle.copy(fontSize = 18.sp),
+                                color = GoldSecondary
+                            )
+                        }
                     }
-                    Text(
-                        text = String.format("%06d", score),
-                        style = HudScoreDigitsStyle.copy(fontSize = 19.sp),
-                        color = GoldSecondary
-                    )
                 }
 
                 // Combo Badge on left beside score
                 if (comboMultiplier > 1) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = Color(0x33FFC857),
+                        color = Color(0x55000000),
                         border = BorderStroke(1.dp, GoldSecondary)
                     ) {
                         Text(
@@ -888,117 +875,123 @@ private fun TopHudBar(
                 }
             }
 
-            // Right side: [Time elapsed count-up] [Volume mute toggle] [Heart lives]
-            // Positioned to the left of the heart/lives display, sized proportionally small
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            // Right side: [Time count-up] [Volume mute] [Pause/Stop] [Heart lives] in floating glass pill
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = Color(0x44000000),
+                border = BorderStroke(1.dp, Color(0x33FFFFFF))
             ) {
-                // 1. Time (count-up elapsed time)
-                val secondsInt = elapsedSeconds.toInt().coerceAtLeast(0)
-                val minutes = secondsInt / 60
-                val secs = secondsInt % 60
-                val timeString = String.format("%02d:%02d", minutes, secs)
-
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0x22FFFFFF),
-                    border = BorderStroke(1.dp, Color(0x3364B5F6))
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Row(
+                    // 1. Time (count-up elapsed time)
+                    val secondsInt = elapsedSeconds.toInt().coerceAtLeast(0)
+                    val minutes = secondsInt / 60
+                    val secs = secondsInt % 60
+                    val timeString = String.format("%02d:%02d", minutes, secs)
+
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color(0x33FFFFFF),
+                        border = BorderStroke(1.dp, Color(0x33FFFFFF))
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .height(26.dp)
+                                .padding(horizontal = 7.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Timer,
+                                contentDescription = null,
+                                tint = Color(0xFF90CAF9),
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = timeString,
+                                style = TimerDigitsStyle.copy(
+                                    fontSize = 12.sp,
+                                    color = TextPrimary
+                                )
+                            )
+                        }
+                    }
+
+                    // 2. Volume Mute Toggle
+                    IconButton(
+                        onClick = onToggleAudioMute,
                         modifier = Modifier
-                            .height(24.dp)
-                            .padding(horizontal = 7.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .size(26.dp)
+                            .clip(CircleShape)
+                            .background(Color(0x33FFFFFF))
+                            .border(1.dp, Color(0x33FFFFFF), CircleShape)
+                            .testTag("hud_mute_btn")
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Timer,
-                            contentDescription = null,
-                            tint = Color(0xFF90CAF9),
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = timeString,
-                            style = TimerDigitsStyle.copy(
-                                fontSize = 12.sp,
-                                color = TextPrimary
-                            )
+                            imageVector = if (isAudioMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
+                            contentDescription = "Mute",
+                            tint = if (isAudioMuted) Color(0xFFFF5252) else MintSuccess,
+                            modifier = Modifier.size(14.dp)
                         )
                     }
-                }
 
-                // 2. Volume Mute Toggle (compact 24dp button to the left of lives)
-                IconButton(
-                    onClick = onToggleAudioMute,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(Color(0x22FFFFFF))
-                        .border(1.dp, Color(0x3364B5F6), CircleShape)
-                        .testTag("hud_mute_btn")
-                ) {
-                    Icon(
-                        imageVector = if (isAudioMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
-                        contentDescription = "Mute",
-                        tint = if (isAudioMuted) Color(0xFFFF5252) else MintSuccess,
-                        modifier = Modifier.size(13.dp)
-                    )
-                }
+                    // 3. Pause / Stop toggle
+                    IconButton(
+                        onClick = onTogglePause,
+                        modifier = Modifier
+                            .size(26.dp)
+                            .clip(CircleShape)
+                            .background(Color(0x33FFFFFF))
+                            .border(1.dp, Color(0x33FFFFFF), CircleShape)
+                            .testTag("hud_pause_btn")
+                    ) {
+                        Icon(
+                            imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
+                            contentDescription = "Pause",
+                            tint = Color(0xFF90CAF9),
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
 
-                // Pause toggle (compact 24dp button matching volume button)
-                IconButton(
-                    onClick = onTogglePause,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(Color(0x22FFFFFF))
-                        .border(1.dp, Color(0x3364B5F6), CircleShape)
-                        .testTag("hud_pause_btn")
-                ) {
-                    Icon(
-                        imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
-                        contentDescription = "Pause",
-                        tint = Color(0xFF90CAF9),
-                        modifier = Modifier.size(13.dp)
-                    )
-                }
-
-                // 3. Heart/lives display
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    for (i in 1..4) {
-                        val isHeartActive = i <= lives
-                        val isBonusSlot = i == 4
-                        if (isHeartActive || !isBonusSlot) {
-                            Box(
-                                modifier = Modifier
-                                    .size(22.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                        when {
-                                            !isHeartActive -> GlassWhite10
-                                            isBonusSlot -> CyanEnergy
-                                            else -> CrimsonDanger
-                                        }
+                    // 4. Heart/lives display
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        for (i in 1..4) {
+                            val isHeartActive = i <= lives
+                            val isBonusSlot = i == 4
+                            if (isHeartActive || !isBonusSlot) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(22.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            when {
+                                                !isHeartActive -> Color(0x33FFFFFF)
+                                                isBonusSlot -> CyanEnergy
+                                                else -> CrimsonDanger
+                                            }
+                                        )
+                                        .then(
+                                            if (isHeartActive) {
+                                                Modifier.border(1.dp, Color(0x66FFFFFF), CircleShape)
+                                            } else {
+                                                Modifier
+                                            }
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = if (isHeartActive) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                        contentDescription = "Life $i",
+                                        tint = if (isHeartActive) Color.White else Color(0x55FFFFFF),
+                                        modifier = Modifier.size(12.dp)
                                     )
-                                    .then(
-                                        if (isHeartActive) {
-                                            Modifier.border(1.dp, Color(0x66FFFFFF), CircleShape)
-                                        } else {
-                                            Modifier
-                                        }
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = if (isHeartActive) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                    contentDescription = "Life $i",
-                                    tint = if (isHeartActive) Color.White else TextMuted.copy(alpha = 0.35f),
-                                    modifier = Modifier.size(12.dp)
-                                )
+                                }
                             }
                         }
                     }

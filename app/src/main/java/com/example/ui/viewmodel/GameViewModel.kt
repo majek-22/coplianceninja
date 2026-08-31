@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 enum class GamePhase {
+    SPLASH,
     LOGIN_REGISTER,
     MENU,
     LEVEL_SELECT,
@@ -39,7 +40,7 @@ enum class GamePhase {
 }
 
 data class GameUiState(
-    val phase: GamePhase = GamePhase.LOGIN_REGISTER,
+    val phase: GamePhase = GamePhase.SPLASH,
     val currentUser: String? = null,
     val userAvatarId: Int = 1,
     val currentLanguage: String = "in",
@@ -90,6 +91,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var flashTimer: Float = 0f
     private var shakeTimer: Float = 0f
     private var feedbackToastTimer: Float = 0f
+    private var targetPhaseAfterSplash: GamePhase = GamePhase.LOGIN_REGISTER
 
     init {
         setupEngineCallbacks()
@@ -108,16 +110,24 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                     userStats = stats,
                     userAvatarId = stats?.avatarId ?: 1,
                     recentSessions = sessions,
-                    highScore = stats?.overallBestScore ?: 0,
-                    phase = GamePhase.MENU
+                    highScore = stats?.overallBestScore ?: 0
                 )
-                musicManager.playMenuTheme()
+                targetPhaseAfterSplash = GamePhase.MENU
             } else {
                 _uiState.value = _uiState.value.copy(
                     currentUser = null,
-                    highScore = 0,
-                    phase = GamePhase.LOGIN_REGISTER
+                    highScore = 0
                 )
+                targetPhaseAfterSplash = GamePhase.LOGIN_REGISTER
+            }
+        }
+    }
+
+    fun onSplashFinished() {
+        if (_uiState.value.phase == GamePhase.SPLASH) {
+            _uiState.value = _uiState.value.copy(phase = targetPhaseAfterSplash)
+            if (targetPhaseAfterSplash == GamePhase.MENU) {
+                musicManager.playMenuTheme()
             }
         }
     }
@@ -353,7 +363,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(phase = phase)
         when (phase) {
             GamePhase.PLAYING -> musicManager.playGameplayTheme()
-            GamePhase.MENU, GamePhase.LEVEL_SELECT, GamePhase.GLOSSARY, GamePhase.LEADERBOARD, GamePhase.PROFILE, GamePhase.RESULT -> {
+            GamePhase.SPLASH, GamePhase.MENU, GamePhase.LEVEL_SELECT, GamePhase.GLOSSARY, GamePhase.LEADERBOARD, GamePhase.PROFILE, GamePhase.RESULT -> {
                 musicManager.playMenuTheme()
             }
             GamePhase.LOGIN_REGISTER -> musicManager.stop()

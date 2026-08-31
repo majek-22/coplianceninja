@@ -297,4 +297,6 @@
     <string name="level_unlock_requirement">Selesaikan Misi %1$d untuk membuka</string>
     <string name="level_unlock_short">Misi %1$d ★1</string>
     <string name="menu_footer_features">Tingkat Kesulitan Otomatis • Kombo hingga 4x • Sinkronisasi Cloud</string>
+    <string name="splash_tap_to_skip">Ketuk di mana saja untuk lanjut</string>
+    <string name="splash_content_desc">Layar Pembuka Bang Patuh Compliance Ninja</string>
 </resources>
