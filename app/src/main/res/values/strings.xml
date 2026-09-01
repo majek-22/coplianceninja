@@ -51,8 +51,8 @@
     <string name="menu_subtitle">Corporate Integrity Arcade</string>
     <string name="menu_start_shift">Start</string>
     <string name="menu_high_score_label">HIGH SCORE</string>
-    <string name="menu_how_to_play">GAMEPLAY RULES</string>
-    <string name="menu_glossary">Gameplay Rules</string>
+    <string name="menu_how_to_play">RULES</string>
+    <string name="menu_glossary">Rules</string>
     <string name="menu_leaderboard">Rankings</string>
     <string name="hud_score_label">SCORE</string>
     <string name="hud_timer_label">TIME</string>
@@ -129,9 +129,11 @@
     <string name="auth_register_tab">Register</string>
     <string name="auth_username_label">Officer Username</string>
     <string name="auth_username_placeholder">Enter officer username</string>
+    <string name="auth_username_hint">Max 10 characters (Letters &amp; Numbers only)</string>
+    <string name="auth_error_username_invalid">Username must be 3-10 characters (letters and numbers only)</string>
     <string name="auth_password_label">Security Password</string>
     <string name="auth_password_placeholder">Enter security password</string>
-    <string name="auth_login_btn">AUTHENTICATE</string>
+    <string name="auth_login_btn">LOG IN</string>
     <string name="auth_register_btn">CREATE ACCOUNT</string>
     <string name="auth_error_empty_fields">Username and password cannot be empty</string>
     <string name="auth_error_user_taken">Username already registered. Please choose another.</string>

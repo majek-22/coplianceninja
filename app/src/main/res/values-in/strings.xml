@@ -51,8 +51,8 @@
     <string name="menu_subtitle">Arkade Integritas Korporat</string>
     <string name="menu_start_shift">Mulai</string>
     <string name="menu_high_score_label">SKOR TERTINGGI</string>
-    <string name="menu_how_to_play">ATURAN PERMAINAN</string>
-    <string name="menu_glossary">Aturan Permainan</string>
+    <string name="menu_how_to_play">ATURAN</string>
+    <string name="menu_glossary">Aturan</string>
     <string name="menu_leaderboard">Peringkat</string>
     <string name="hud_score_label">SKOR</string>
     <string name="hud_timer_label">WAKTU</string>
@@ -129,9 +129,11 @@
     <string name="auth_register_tab">Daftar</string>
     <string name="auth_username_label">Nama Pengguna Petugas</string>
     <string name="auth_username_placeholder">Masukkan nama pengguna</string>
+    <string name="auth_username_hint">Maks. 10 karakter (Huruf &amp; Angka saja)</string>
+    <string name="auth_error_username_invalid">Username harus 3-10 karakter (hanya huruf dan angka)</string>
     <string name="auth_password_label">Kata Sandi Keamanan</string>
     <string name="auth_password_placeholder">Masukkan kata sandi</string>
-    <string name="auth_login_btn">AUTENTIKASI</string>
+    <string name="auth_login_btn">LOG IN</string>
     <string name="auth_register_btn">BUAT AKUN</string>
     <string name="auth_error_empty_fields">Nama pengguna dan kata sandi tidak boleh kosong</string>
     <string name="auth_error_user_taken">Nama pengguna sudah terdaftar. Silakan pilih yang lain.</string>

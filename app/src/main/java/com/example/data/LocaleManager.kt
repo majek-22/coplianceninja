@@ -13,10 +13,10 @@ object LocaleManager {
     fun getCurrentLocaleTag(): String {
         val locales = AppCompatDelegate.getApplicationLocales()
         return if (!locales.isEmpty) {
-            val primary = locales.get(0)?.language ?: "in"
-            if (primary == "en") "en" else "in"
+            val primary = locales.get(0)?.language ?: "en"
+            if (primary == "in" || primary == "id") "in" else "en"
         } else {
-            "in"
+            "en"
         }
     }
 }

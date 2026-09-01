@@ -36,8 +36,11 @@ class AuthRepository(
         if (cleanUser.isBlank() || password.isBlank()) {
             return AuthResult.Error("Username and password cannot be empty")
         }
-        if (cleanUser.length < 3) {
-            return AuthResult.Error("Username must be at least 3 characters")
+        if (cleanUser.length < 3 || cleanUser.length > 10) {
+            return AuthResult.Error("Username must be 3-10 characters")
+        }
+        if (!cleanUser.all { it.isLetterOrDigit() }) {
+            return AuthResult.Error("Username can only contain letters and numbers")
         }
 
         val existing = database.userAccountDao().getByUsername(cleanUser)

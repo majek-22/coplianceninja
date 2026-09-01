@@ -19,6 +19,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -73,6 +74,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -98,6 +100,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -223,9 +226,9 @@ fun GameScreen(
             viewModel.setScreenDimensions(widthPx, heightPx)
         }
 
-        // 1. FULLSCREEN GAMEPLAY BACKGROUND IMAGE
+        // 1. FULLSCREEN GAMEPLAY BACKGROUND IMAGE (DYNAMIC PER MISSION)
         Image(
-            painter = painterResource(id = R.drawable.bg_gameplay_screen),
+            painter = painterResource(id = uiState.selectedLevel.backgroundRes),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -429,6 +432,107 @@ fun GameScreen(
                     .background(Color(flashColor))
             )
         }
+
+        // 5. READY COUNTDOWN OVERLAY (3 Seconds Orange Banner)
+        if (uiState.readyCountdown > 0f) {
+            val countdownInt = (uiState.readyCountdown.toInt() + 1).coerceIn(1, 3)
+            val readyTransition = rememberInfiniteTransition(label = "ready_pulse")
+            val readyScale by readyTransition.animateFloat(
+                initialValue = 0.94f,
+                targetValue = 1.06f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(450, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "ready_scale"
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x66000000)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.scale(readyScale)
+                ) {
+                    Text(
+                        text = "Ready...",
+                        color = Color(0xFFFF9800), // Orange
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 2.sp,
+                        style = androidx.compose.ui.text.TextStyle(
+                            shadow = androidx.compose.ui.graphics.Shadow(
+                                color = Color(0xCC000000),
+                                offset = Offset(4f, 4f),
+                                blurRadius = 14f
+                            )
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(52.dp)
+                            .clip(CircleShape)
+                            .background(Color(0x33FF9800))
+                            .border(2.dp, Color(0xFFFF9800), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "$countdownInt",
+                            color = Color(0xFFFFB74D),
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+            }
+        }
+
+        // 6. GAME OVER BANNER (Red)
+        if (uiState.isGameOverBannerShowing) {
+            val goTransition = rememberInfiniteTransition(label = "game_over_pulse")
+            val goScale by goTransition.animateFloat(
+                initialValue = 0.95f,
+                targetValue = 1.10f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(400, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "go_scale"
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x88000000)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.scale(goScale)
+                ) {
+                    Text(
+                        text = "GAME OVER",
+                        color = Color(0xFFFF2A2A), // Bold Red
+                        fontSize = 52.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 3.sp,
+                        style = androidx.compose.ui.text.TextStyle(
+                            shadow = androidx.compose.ui.graphics.Shadow(
+                                color = Color(0xFF000000),
+                                offset = Offset(6f, 6f),
+                                blurRadius = 18f
+                            )
+                        )
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -443,6 +547,20 @@ private fun FlyingItemComposable(
     modifier: Modifier = Modifier
 ) {
     if (painter == null) return
+
+    val categoryColor = when {
+        item.category.isBonus -> Color(0xFF00E5FF)
+        item.category.isTrap -> Color(0xFFFF7043)
+        item.isViolation -> Color(0xFFFFC857)
+        else -> Color(0xFF64B5F6)
+    }
+
+    val discBgColor = when {
+        item.category.isBonus -> Color(0xFF043842)
+        item.category.isTrap -> Color(0xFF45190C)
+        item.isViolation -> Color(0xFF3E2805)
+        else -> Color(0xFF0C2C4D)
+    }
 
     if (!item.sliced) {
         val density = LocalDensity.current
@@ -471,131 +589,86 @@ private fun FlyingItemComposable(
             ) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     val r = size.width / 2f
-                    val glowColor = Color(item.category.glowColor)
 
-                    // 1. Radiant outer neon aura for strong contrast
+                    // 1. Radiant outer neon aura matching RULES category color
                     drawCircle(
                         brush = Brush.radialGradient(
                             colors = listOf(
-                                glowColor.copy(alpha = 0.65f),
-                                glowColor.copy(alpha = 0.22f),
+                                categoryColor.copy(alpha = 0.75f),
+                                categoryColor.copy(alpha = 0.22f),
                                 Color.Transparent
                             ),
-                            radius = r * 1.50f,
+                            radius = r * 1.45f,
                             center = Offset(r, r)
                         ),
-                        radius = r * 1.50f,
+                        radius = r * 1.45f,
                         center = Offset(r, r)
                     )
 
-                    // 2. Solid dark contrast disc behind token
+                    // 2. Vibrant colored background disc matching RULES (not pitch black!)
                     drawCircle(
-                        color = Color(0xFF070E18),
-                        radius = r + 1f,
+                        color = discBgColor,
+                        radius = r,
                         center = Offset(r, r)
                     )
 
-                    // 3. Draw full-bleed vector artwork token
-                    with(painter) {
-                        draw(size = Size(r * 2f, r * 2f))
+                    // Inner soft highlight disc
+                    drawCircle(
+                        color = categoryColor.copy(alpha = 0.25f),
+                        radius = r * 0.88f,
+                        center = Offset(r, r)
+                    )
+
+                    // 3. Draw original vector icon in full colors centered inside the category disc
+                    val iconDrawSize = r * 1.52f
+                    val iconPadding = (r * 2f - iconDrawSize) / 2f
+                    withTransform({
+                        translate(left = iconPadding, top = iconPadding)
+                    }) {
+                        with(painter) {
+                            draw(size = Size(iconDrawSize, iconDrawSize))
+                        }
                     }
 
-                    // 4. Accessible, soft category rim border ring
-                    val ringColor = Color(item.category.borderColor)
+                    // 4. Accessible, crisp rim border ring matching RULES
                     drawCircle(
-                        color = ringColor,
-                        radius = r * 0.96f,
+                        color = categoryColor,
+                        radius = r * 0.95f,
                         center = Offset(r, r),
                         style = Stroke(width = 3.5f)
                     )
-
-                    // 5. Category identification badge shape (Colorblind-safe)
-                    when (item.category.badgeShape) {
-                        BadgeShape.HEXAGON -> {
-                            val hexPath = Path().apply {
-                                val hexR = r * 0.22f
-                                val cx = r
-                                val cy = r * 0.28f
-                                for (i in 0..5) {
-                                    val angle = i * (PI.toFloat() / 3f) - (PI.toFloat() / 6f)
-                                    val px = cx + hexR * cos(angle)
-                                    val py = cy + hexR * sin(angle)
-                                    if (i == 0) moveTo(px, py) else lineTo(px, py)
-                                }
-                                close()
-                            }
-                            drawPath(hexPath, color = Color(0xFF1E293B))
-                            drawPath(hexPath, color = Color(item.category.borderColor), style = Stroke(width = 2.5f))
-                        }
-                        BadgeShape.DIAMOND_DASHED -> {
-                            val diamondPath = Path().apply {
-                                val dR = r * 0.20f
-                                val cx = r
-                                val cy = r * 0.28f
-                                moveTo(cx, cy - dR)
-                                lineTo(cx + dR, cy)
-                                lineTo(cx, cy + dR)
-                                lineTo(cx - dR, cy)
-                                close()
-                            }
-                            drawPath(diamondPath, color = Color(0xFF1E293B))
-                            drawPath(diamondPath, color = Color(item.category.borderColor), style = Stroke(width = 2.5f))
-                        }
-                        BadgeShape.STAR -> {
-                            val starPath = Path().apply {
-                                val cx = r
-                                val cy = r * 0.28f
-                                val outerR = r * 0.22f
-                                val innerR = r * 0.09f
-                                for (i in 0..7) {
-                                    val rad = if (i % 2 == 0) outerR else innerR
-                                    val angle = i * (PI.toFloat() / 4f)
-                                    val px = cx + rad * cos(angle)
-                                    val py = cy + rad * sin(angle)
-                                    if (i == 0) moveTo(px, py) else lineTo(px, py)
-                                }
-                                close()
-                            }
-                            drawPath(starPath, color = Color(item.category.borderColor))
-                        }
-                        BadgeShape.CIRCLE -> {
-                            val cx = r
-                            val cy = r * 0.28f
-                            drawCircle(color = Color(0xFF1E293B), radius = r * 0.16f, center = Offset(cx, cy))
-                            drawCircle(color = Color(item.category.borderColor), radius = r * 0.16f, center = Offset(cx, cy), style = Stroke(width = 2f))
-                        }
-                    }
                 }
             }
 
             // Unrotated floating label badge below token for instant readability
+            val rawText = androidx.compose.ui.res.stringResource(item.category.displayNameRes)
+            val words = rawText.split(" ").filter { it.isNotBlank() }
+            val formattedText = if (words.size >= 2) words.joinToString("\n") else rawText
+
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = 12.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(
-                        when {
-                            item.category.isTrap -> Color(0xEE3B0764)
-                            item.category.isBonus -> Color(0xEE422006)
-                            item.isViolation -> Color(0xEE2A0B0B)
-                            else -> Color(0xEE082F49)
-                        }
-                    )
+                    .offset(y = 10.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(discBgColor.copy(alpha = 0.95f))
                     .border(
-                        width = if (item.category.isTrap) 1.5.dp else 1.dp,
-                        color = Color(item.category.borderColor),
-                        shape = RoundedCornerShape(6.dp)
+                        width = 0.8.dp,
+                        color = categoryColor,
+                        shape = RoundedCornerShape(4.dp)
                     )
-                    .padding(horizontal = 5.dp, vertical = 1.dp)
+                    .padding(horizontal = 4.dp, vertical = 1.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = androidx.compose.ui.res.stringResource(item.category.displayNameRes),
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (item.category.isTrap) Color(0xFFF0ABFC) else Color.White,
-                    maxLines = 1,
-                    softWrap = false
+                    text = formattedText,
+                    fontSize = 7.sp,
+                    lineHeight = 8.5.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    letterSpacing = 0.2.sp,
+                    textAlign = TextAlign.Center,
+                    color = categoryColor,
+                    maxLines = 4,
+                    softWrap = true
                 )
             }
         }
@@ -689,6 +762,20 @@ private fun DrawScope.drawSlicedHalf(
         }
     }
 
+    val categoryColor = when {
+        category.isBonus -> Color(0xFF00E5FF)
+        category.isTrap -> Color(0xFFFF7043)
+        category.isViolation -> Color(0xFFFFC857)
+        else -> Color(0xFF64B5F6)
+    }
+
+    val discBgColor = when {
+        category.isBonus -> Color(0xFF043842)
+        category.isTrap -> Color(0xFF45190C)
+        category.isViolation -> Color(0xFF3E2805)
+        else -> Color(0xFF0C2C4D)
+    }
+
     clipPath(clipPath) {
         withTransform({
             translate(left = center.x, top = center.y)
@@ -696,27 +783,36 @@ private fun DrawScope.drawSlicedHalf(
         }) {
             val r = radius
 
-            // Dark backing disc
+            // Colored backing disc matching RULES (not pitch black!)
             drawCircle(
-                color = Color(0xFF070E18).copy(alpha = alpha),
-                radius = r + 1f
+                color = discBgColor.copy(alpha = alpha),
+                radius = r
             )
 
-            // Draw full-bleed vector artwork token
-            val iconSize = r * 2f
+            // Inner soft highlight disc
+            drawCircle(
+                color = categoryColor.copy(alpha = alpha * 0.25f),
+                radius = r * 0.88f
+            )
+
+            // Draw vector icon in full original color
+            val iconDrawSize = r * 1.52f
+            val iconPadding = (r * 2f - iconDrawSize) / 2f
             withTransform({
-                translate(left = -r, top = -r)
+                translate(left = -r + iconPadding, top = -r + iconPadding)
             }) {
                 with(painter) {
-                    draw(size = Size(iconSize, iconSize), alpha = alpha)
+                    draw(
+                        size = Size(iconDrawSize, iconDrawSize),
+                        alpha = alpha
+                    )
                 }
             }
 
             // High-contrast rim border ring
-            val ringColor = Color(category.borderColor)
             drawCircle(
-                color = ringColor.copy(alpha = alpha),
-                radius = r * 0.96f,
+                color = categoryColor.copy(alpha = alpha),
+                radius = r * 0.95f,
                 style = Stroke(width = 3.5f)
             )
         }
@@ -920,39 +1016,45 @@ private fun TopHudBar(
                         }
                     }
 
-                    // 2. Volume Mute Toggle
-                    IconButton(
-                        onClick = onToggleAudioMute,
+                    // 2. Volume Mute Toggle (Matching Main Menu size & style)
+                    Box(
                         modifier = Modifier
-                            .size(26.dp)
+                            .size(30.dp)
                             .clip(CircleShape)
-                            .background(Color(0x33FFFFFF))
-                            .border(1.dp, Color(0x33FFFFFF), CircleShape)
-                            .testTag("hud_mute_btn")
+                            .background(Color(0x44000000))
+                            .border(
+                                1.2.dp,
+                                if (isAudioMuted) Color(0x88FF5252) else Color(0x884FCB8F),
+                                CircleShape
+                            )
+                            .clickable(onClick = onToggleAudioMute)
+                            .testTag("hud_mute_btn"),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = if (isAudioMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
                             contentDescription = "Mute",
                             tint = if (isAudioMuted) Color(0xFFFF5252) else MintSuccess,
-                            modifier = Modifier.size(14.dp)
+                            modifier = Modifier.size(16.dp)
                         )
                     }
 
-                    // 3. Pause / Stop toggle
-                    IconButton(
-                        onClick = onTogglePause,
+                    // 3. Pause / Stop toggle (Matching Main Menu size & style)
+                    Box(
                         modifier = Modifier
-                            .size(26.dp)
+                            .size(30.dp)
                             .clip(CircleShape)
-                            .background(Color(0x33FFFFFF))
-                            .border(1.dp, Color(0x33FFFFFF), CircleShape)
-                            .testTag("hud_pause_btn")
+                            .background(Color(0x44000000))
+                            .border(1.2.dp, Color(0x8864B5F6), CircleShape)
+                            .clickable(onClick = onTogglePause)
+                            .testTag("hud_pause_btn"),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
                             contentDescription = "Pause",
                             tint = Color(0xFF90CAF9),
-                            modifier = Modifier.size(14.dp)
+                            modifier = Modifier.size(16.dp)
                         )
                     }
 

@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -70,6 +71,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -158,10 +160,6 @@ fun LevelSelectScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(BrandPrimary)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 10.dp)
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDragStart = { offset ->
@@ -194,9 +192,35 @@ fun LevelSelectScreen(
     ) {
         val isTabletLandscape = maxWidth > 600.dp
 
+        // Fullscreen scenic background artwork
+        androidx.compose.foundation.Image(
+            painter = painterResource(id = R.drawable.bg_main_menu),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = androidx.compose.ui.layout.ContentScale.Crop
+        )
+
+        // Dark gradient overlay for crystal clear contrast
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xCC0D1B2A),
+                            Color(0xEE141E30),
+                            Color(0xF80F172A)
+                        )
+                    )
+                )
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(horizontal = 16.dp, vertical = 10.dp)
                 .offset { IntOffset(shakeOffset.value.roundToInt(), 0) }
         ) {
             // Header Bar
@@ -377,33 +401,49 @@ private fun ProfessionalMissionCard(
                 .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon in gentle rounded container with depth
+            // Themed Mission Image Badge with rich illustrated asset
             Box(
                 modifier = Modifier
-                    .size(54.dp)
+                    .size(56.dp)
                     .clip(RoundedCornerShape(14.dp))
-                    .background(if (isUnlocked) Color(0x2264B5F6) else Color(0x15FFFFFF))
+                    .background(
+                        if (isUnlocked) Brush.radialGradient(
+                            listOf(Color(0x3364B5F6), Color(0x180D1B2A))
+                        ) else Brush.radialGradient(
+                            listOf(Color(0x15FFFFFF), Color(0x11000000))
+                        )
+                    )
                     .border(
-                        1.dp,
-                        if (isUnlocked) Color(0x4464B5F6) else Color(0x22FFFFFF),
+                        1.2.dp,
+                        if (isUnlocked) Color(0x5564B5F6) else Color(0x22FFFFFF),
                         RoundedCornerShape(14.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                if (isUnlocked) {
-                    Icon(
-                        painter = painterResource(id = level.iconRes),
-                        contentDescription = null,
-                        tint = GoldSecondary,
-                        modifier = Modifier.size(28.dp)
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = "Locked",
-                        tint = Color(0xFF78909C),
-                        modifier = Modifier.size(24.dp)
-                    )
+                Image(
+                    painter = painterResource(id = level.iconRes),
+                    contentDescription = stringResource(level.nameRes),
+                    modifier = Modifier
+                        .size(44.dp)
+                        .alpha(if (isUnlocked) 1f else 0.35f),
+                    contentScale = ContentScale.Fit
+                )
+                if (!isUnlocked) {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xDD101827))
+                            .border(1.dp, Color(0x55FFFFFF), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Locked",
+                            tint = Color(0xFFFFC857),
+                            modifier = Modifier.size(13.dp)
+                        )
+                    }
                 }
             }
 
@@ -532,20 +572,44 @@ private fun MissionBriefingDialog(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Header Icon
+                // Header Mission Image
                 Box(
                     modifier = Modifier
-                        .size(54.dp)
-                        .clip(CircleShape)
-                        .background(Color(0x33FFC857)),
+                        .size(76.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(
+                            Brush.radialGradient(
+                                listOf(Color(0x4464B5F6), Color(0x22132238))
+                            )
+                        )
+                        .border(1.5.dp, Color(0x6664B5F6), RoundedCornerShape(20.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    Image(
                         painter = painterResource(id = level.iconRes),
-                        contentDescription = null,
-                        tint = GoldSecondary,
-                        modifier = Modifier.size(28.dp)
+                        contentDescription = stringResource(level.nameRes),
+                        modifier = Modifier
+                            .size(62.dp)
+                            .alpha(if (isUnlocked) 1f else 0.45f),
+                        contentScale = ContentScale.Fit
                     )
+                    if (!isUnlocked) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xDD101827))
+                                .border(1.dp, Color(0x88FFFFFF), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "Locked",
+                                tint = Color(0xFFFFC857),
+                                modifier = Modifier.size(15.dp)
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))

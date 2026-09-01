@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             ComplianceSlicerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = BackgroundDark
+                    color = androidx.compose.ui.graphics.Color(0xFF0F91C5)
                 ) {
                     ComplianceSlicerApp()
                 }

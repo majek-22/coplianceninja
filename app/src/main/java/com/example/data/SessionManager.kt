@@ -46,7 +46,7 @@ class SessionManager(private val context: Context) {
     }
 
     val appLanguage: Flow<String> = context.dataStore.data.map { prefs ->
-        prefs[KEY_LANGUAGE] ?: "in"
+        prefs[KEY_LANGUAGE] ?: "en"
     }
 
     val isAudioMuted: Flow<Boolean> = context.dataStore.data.map { prefs ->

@@ -22,6 +22,7 @@ import com.example.data.local.AppDatabase
 import com.example.data.local.GameSessionRecord
 import com.example.data.local.UserStats
 import com.example.engine.GameEngine
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,7 +44,7 @@ data class GameUiState(
     val phase: GamePhase = GamePhase.SPLASH,
     val currentUser: String? = null,
     val userAvatarId: Int = 1,
-    val currentLanguage: String = "in",
+    val currentLanguage: String = "en",
     val isAudioMuted: Boolean = false,
     val selectedLevel: LevelConfig = LevelConfig.ALL_LEVELS.first(),
     val selectedDifficulty: GameDifficulty = GameDifficulty.NORMAL,
@@ -70,7 +71,9 @@ data class GameUiState(
     val isLeaderboardOffline: Boolean = false,
     val isLeaderboardLoading: Boolean = false,
     val authErrorMessage: String? = null,
-    val debugOverlayEnabled: Boolean = false
+    val debugOverlayEnabled: Boolean = false,
+    val readyCountdown: Float = 0f,
+    val isGameOverBannerShowing: Boolean = false
 )
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
@@ -408,7 +411,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             screenShakeIntensity = 0f,
             flashOverlayColor = null,
             slowMoFactor = 1.0f,
-            isNewHighScore = false
+            isNewHighScore = false,
+            readyCountdown = 3.0f,
+            isGameOverBannerShowing = false
         )
         musicManager.playGameplayTheme()
     }
@@ -432,6 +437,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(
             phase = GamePhase.MENU,
             isPaused = false,
+            readyCountdown = 0f,
+            isGameOverBannerShowing = false,
             feedbackMessage = null
         )
         musicManager.playMenuTheme()
@@ -446,6 +453,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onSliceStart() {
+        if (_uiState.value.readyCountdown > 0f || _uiState.value.isGameOverBannerShowing) return
         engine.startStroke()
     }
 
@@ -454,12 +462,30 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onSliceSegment(x1: Float, y1: Float, x2: Float, y2: Float): Int {
-        if (_uiState.value.isPaused || _uiState.value.phase != GamePhase.PLAYING) return 0
+        if (_uiState.value.isPaused || _uiState.value.phase != GamePhase.PLAYING || _uiState.value.readyCountdown > 0f || _uiState.value.isGameOverBannerShowing) return 0
         return engine.processSliceSegment(x1, y1, x2, y2)
     }
 
     fun updateFrame(deltaRealSeconds: Float) {
         if (_uiState.value.phase != GamePhase.PLAYING || _uiState.value.isPaused) return
+
+        // 1. Handle Ready Countdown (3 seconds before items start)
+        if (_uiState.value.readyCountdown > 0f) {
+            val updatedCountdown = (_uiState.value.readyCountdown - deltaRealSeconds).coerceAtLeast(0f)
+            _uiState.value = _uiState.value.copy(readyCountdown = updatedCountdown)
+            return
+        }
+
+        // 2. Handle Game Over Banner pause
+        if (_uiState.value.isGameOverBannerShowing) {
+            var currentShake = 0f
+            if (shakeTimer > 0f) {
+                shakeTimer -= deltaRealSeconds
+                currentShake = (shakeTimer / 0.35f) * 18f
+            }
+            _uiState.value = _uiState.value.copy(screenShakeIntensity = currentShake)
+            return
+        }
 
         var currentSlowMo = 1.0f
         if (slowMoTimer > 0f) {
@@ -519,6 +545,13 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             categoryBreakdown[item.category] = item.count
         }
 
+        // 1. Trigger GAME OVER banner display
+        shakeTimer = 0.40f
+        _uiState.value = _uiState.value.copy(
+            isGameOverBannerShowing = true,
+            screenShakeIntensity = 16f
+        )
+
         viewModelScope.launch {
             val updatedStats = leaderboardRepository.recordGameResult(
                 username = user,
@@ -538,6 +571,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             val currentHigh = _uiState.value.highScore
             val isNewHigh = finalScore > currentHigh
 
+            // Display "GAME OVER" banner for 2.2 seconds before transitioning to Shift Report
+            delay(2200L)
+
             _uiState.value = _uiState.value.copy(
                 phase = GamePhase.RESULT,
                 score = finalScore,
@@ -552,6 +588,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 userAvatarId = updatedStats?.avatarId ?: 1,
                 recentSessions = sessions,
                 isPaused = false,
+                isGameOverBannerShowing = false,
                 feedbackMessage = null,
                 flashOverlayColor = null,
                 screenShakeIntensity = 0f
