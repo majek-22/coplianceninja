@@ -311,4 +311,159 @@ enum class ComplianceCategory(
             isViolation -> R.string.category_violation
             else -> R.string.category_legit
         }
+
+    fun getDisplayName(language: String): String {
+        val isId = language.equals("in", ignoreCase = true) || language.equals("id", ignoreCase = true)
+        return when (this) {
+            BRIBERY -> if (isId) "Suap" else "Bribery"
+            FRAUD -> if (isId) "Kecurangan (Fraud)" else "Fraud"
+            MONEY_LAUNDERING -> if (isId) "Pencucian Uang" else "Money Laundering"
+            DATA_BREACH -> if (isId) "Kebocoran Data" else "Data Breach"
+            SYSTEMIC_CORRUPTION -> if (isId) "Korupsi Sistemik" else "Systemic Corruption"
+            INSIDER_TRADING -> if (isId) "Perdagangan Orang Dalam" else "Insider Trading"
+            CONFLICT_OF_INTEREST -> if (isId) "Benturan Kepentingan" else "Conflict of Interest"
+            EMBEZZLEMENT -> if (isId) "Penggelapan Dana" else "Embezzlement"
+            OFFICIAL_DOCUMENT -> if (isId) "Dokumen Resmi" else "Official Document"
+            VERIFIED_APPROVAL -> if (isId) "Persetujuan Terverifikasi" else "Verified Approval"
+            VALID_PARTNERSHIP -> if (isId) "Kemitraan Sah" else "Valid Partnership"
+            CERTIFICATION -> if (isId) "Sertifikasi" else "Certification"
+            VERIFIED_INVOICE -> if (isId) "Faktur Terverifikasi" else "Verified Invoice"
+            COMPLIANCE_AUDIT -> if (isId) "Audit Kepatuhan" else "Compliance Audit"
+            ETHICS_TRAINING -> if (isId) "Pelatihan Etika" else "Ethics Training"
+            TRANSPARENCY_REPORT -> if (isId) "Laporan Transparansi" else "Transparency Report"
+            FALSE_ALARM -> if (isId) "Alarm Palsu" else "False Alarm"
+            UNVERIFIED_RUMOR -> if (isId) "Rumor Tak Terverifikasi" else "Unverified Rumor"
+            HONEST_MISTAKE -> if (isId) "Kekhilafan Administratif" else "Honest Mistake"
+            PHISHING_BAIT -> if (isId) "Umpan Phishing" else "Phishing Bait"
+            MISFILED_MEMO -> if (isId) "Memo Salah Simpan" else "Misfiled Memo"
+            SHIELD -> if (isId) "Perisai Kepatuhan" else "Compliance Shield"
+            WHISTLEBLOWER -> if (isId) "Saluran WBS (Pelapor)" else "Whistleblower Hotline"
+            STAR_AUDITOR -> if (isId) "Auditor Teladan" else "Star Auditor"
+        }
+    }
+
+    fun getExplanation(language: String): String {
+        val isId = language.equals("in", ignoreCase = true) || language.equals("id", ignoreCase = true)
+        return when (this) {
+            BRIBERY -> if (isId)
+                "UU No. 20 Tahun 2001 Tentang Tindak Pidana Korupsi: Memberi atau menerima suap/gratifikasi melanggar integritas dan ketentuan hukum tindak pidana korupsi."
+            else
+                "Law No. 20/2001 on Corruption Eradication: Giving or receiving bribes/gratuities violates integrity and anti-corruption statutory provisions."
+
+            FRAUD -> if (isId)
+                "Manipulasi catatan perusahaan, pemalsuan tanda tangan, atau pembukuan fiktif merusak kebenaran dan integritas organisasi."
+            else
+                "Manipulating corporate records, forging signatures, or fictitious bookkeeping damages organizational truth and integrity."
+
+            MONEY_LAUNDERING -> if (isId)
+                "Regulasi APU-PPT (Anti Pencucian Uang dan Pencegahan Pendanaan Terorisme): Menata transaksi mencurigakan untuk menyamarkan asal dana kejahatan."
+            else
+                "AML-CFT Regulations (Anti-Money Laundering & Countering Financing of Terrorism): Structuring suspicious transactions to disguise illicit proceeds."
+
+            DATA_BREACH -> if (isId)
+                "UU No. 27 Tahun 2022 Tentang Pelindungan Data Pribadi: Membuka data rahasia/pribadi tanpa otorisasi sah melanggar hukum privasi."
+            else
+                "Law No. 27/2022 on Personal Data Protection: Unauthorized disclosure of confidential or personal data violates privacy laws."
+
+            SYSTEMIC_CORRUPTION -> if (isId)
+                "Penyalahgunaan wewenang secara terstruktur dan terlembaga merusak integritas dan membawa pertanggungjawaban pidana berat."
+            else
+                "Deeply entrenched abuse of entrusted power threatens institutional integrity and creates severe corporate criminal liability."
+
+            INSIDER_TRADING -> if (isId)
+                "Berdagang efek berdasarkan informasi rahasia merusak keadilan pasar dan kepercayaan."
+            else
+                "Trading securities based on non-public material information compromises market fairness."
+
+            CONFLICT_OF_INTEREST -> if (isId)
+                "Memanfaatkan wewenang untuk keuntungan pribadi atau keluarga merusak objektivitas."
+            else
+                "Using official position for personal or familial gain undermines objective governance."
+
+            EMBEZZLEMENT -> if (isId)
+                "Menyalahgunakan dana titipan perusahaan untuk kepentingan pribadi adalah tindak pidana berat."
+            else
+                "Misappropriating entrusted company assets for personal gain is a severe criminal offense."
+
+            OFFICIAL_DOCUMENT -> if (isId)
+                "Catatan resmi perusahaan harus dijaga dan diproses melalui saluran tata kelola kepatuhan yang sah."
+            else
+                "Authorized corporate records must be preserved and processed through designated compliance governance channels."
+
+            VERIFIED_APPROVAL -> if (isId)
+                "Persetujuan ganda dan tanda tangan manajemen yang sah memastikan akuntabilitas atas setiap keputusan bisnis."
+            else
+                "Proper dual-control sign-offs and management approvals ensure accountability and checks across all business decisions."
+
+            VALID_PARTNERSHIP -> if (isId)
+                "Mitra pihak ketiga yang telah melalui uji tuntas (due diligence) anti-korupsi adalah rekanan bisnis yang sah."
+            else
+                "Vetted third-party counterparties who pass rigorous anti-corruption due diligence are legitimate business partners."
+
+            CERTIFICATION -> if (isId)
+                "Sertifikasi industri membuktikan ketaatan operasional terhadap standar keselamatan dan etika internasional."
+            else
+                "Industry and regulatory certifications validate verified operational adherence to international safety and ethical benchmarks."
+
+            VERIFIED_INVOICE -> if (isId)
+                "Faktur sah yang cocok dengan pesanan pembelian (PO) menjaga integritas keuangan dari tagihan fiktif."
+            else
+                "Accurate invoices matched to legitimate purchase orders safeguard financial integrity against fraudulent billing."
+
+            COMPLIANCE_AUDIT -> if (isId)
+                "Verifikasi independen untuk memastikan kesesuaian operasional dengan standar regulasi."
+            else
+                "Independent verification ensuring operational adherence to regulatory benchmarks."
+
+            ETHICS_TRAINING -> if (isId)
+                "Pembekalan etika berkelanjutan agar seluruh jajaran sigap mencegah pelanggaran integritas."
+            else
+                "Continuous ethics development empowering staff to prevent integrity violations."
+
+            TRANSPARENCY_REPORT -> if (isId)
+                "Keterbukaan informasi tata kelola yang memperkuat akuntabilitas institusi."
+            else
+                "Public reporting of governance performance fostering institutional accountability."
+
+            FALSE_ALARM -> if (isId)
+                "Laporan keamanan yang ternyata tidak berdasar. Bertindak terburu-buru tanpa verifikasi membuang sumber daya perusahaan."
+            else
+                "An unconfirmed security tip that turned out to be baseless. Acting hastily without verification wastes corporate resources."
+
+            UNVERIFIED_RUMOR -> if (isId)
+                "Gosip kantor tanpa bukti faktual. Kepatuhan profesional membutuhkan bukti dokumen, bukan spekulasi kabar angin."
+            else
+                "Office gossip lacking factual evidence. Professional compliance requires documented proof, not speculative hearsay."
+
+            HONEST_MISTAKE -> if (isId)
+                "Kekhilafan ketik atau kesalahan format yang tidak disengaja. Kesalahan manusia memerlukan bimbingan, bukan sanksi pidana."
+            else
+                "An accidental clerical typo or formatting error. Human mistakes require guidance and coaching, not criminal sanction."
+
+            PHISHING_BAIT -> if (isId)
+                "Simulasi internal untuk menguji kewaspadaan staf. Selalu verifikasi sebelum memicu alarm."
+            else
+                "A simulation test designed to assess alertness. Always verify before reporting a breach."
+
+            MISFILED_MEMO -> if (isId)
+                "Kekeliruan pengarsipan dokumen sah. Cukup perbaiki penataan tanpa perlu eskalasi."
+            else
+                "An accidental document misplacement. Needs simple re-archiving, not disciplinary escalation."
+
+            SHIELD -> if (isId)
+                "Kewaspadaan risiko dan pengendalian internal proaktif berfungsi sebagai perisai dari kerugian reputasi dan denda hukum."
+            else
+                "Proactive risk vigilance and internal controls act as a corporate shield against reputational damage and regulatory penalties."
+
+            WHISTLEBLOWER -> if (isId)
+                "Saluran pelaporan rahasia yang melindungi pelapor integritas dan membongkar risiko."
+            else
+                "Confidential reporting channel safeguarding whistleblowers and unmasking internal risks."
+
+            STAR_AUDITOR -> if (isId)
+                "Penghargaan kehormatan atas dedikasi luar biasa dalam tata kelola etika korporat."
+            else
+                "Honorary commendation recognizing exemplary dedication to institutional integrity."
+        }
+    }
 }

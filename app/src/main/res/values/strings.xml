@@ -92,10 +92,10 @@
     <string name="cat_honest_mistake">Honest Mistake</string>
 
     <!-- Category Explanations (Compliance Value Reinforcement) -->
-    <string name="exp_bribery">UU No. 20 Tahun 2001 Tentang Tindak Pidana Korupsi: Memberi atau menerima suap/gratifikasi melanggar integritas dan ketentuan hukum tindak pidana korupsi.</string>
-    <string name="exp_fraud">Manipulasi catatan perusahaan, pemalsuan tanda tangan, atau pembukuan fiktif merusak kebenaran dan integritas organisasi.</string>
-    <string name="exp_money_laundering">Regulasi APU-PPT (Anti Pencucian Uang dan Pencegahan Pendanaan Terorisme): Menata transaksi mencurigakan untuk menyamarkan asal dana kejahatan.</string>
-    <string name="exp_data_breach">UU No. 27 Tahun 2022 Tentang Pelindungan Data Pribadi: Membuka data rahasia/pribadi tanpa otorisasi sah melanggar hukum privasi.</string>
+    <string name="exp_bribery">Law No. 20/2001 on Corruption Eradication: Giving or receiving bribes/gratuities violates integrity and anti-corruption statutory provisions.</string>
+    <string name="exp_fraud">Manipulating corporate records, forging signatures, or fictitious bookkeeping damages organizational truth and integrity.</string>
+    <string name="exp_money_laundering">AML-CFT Regulations (Anti-Money Laundering &amp; Countering Financing of Terrorism): Structuring suspicious transactions to disguise illicit proceeds.</string>
+    <string name="exp_data_breach">Law No. 27/2022 on Personal Data Protection: Unauthorized disclosure of confidential or personal data violates privacy laws.</string>
     <string name="exp_systemic_corruption">Deeply entrenched abuse of entrusted power threatens institutional integrity and creates severe corporate criminal liability.</string>
     <string name="exp_official_document">Authorized corporate records must be preserved and processed through designated compliance governance channels.</string>
     <string name="exp_verified_approval">Proper dual-control sign-offs and management approvals ensure accountability and checks across all business decisions.</string>

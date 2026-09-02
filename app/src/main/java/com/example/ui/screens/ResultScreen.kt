@@ -155,10 +155,27 @@ fun ResultScreen(
                     .padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
                 val isLandscape = maxWidth > maxHeight
+                val isIndonesian = currentLanguage == "in" || currentLanguage == "id"
                 val secondsInt = elapsedSeconds.toInt().coerceAtLeast(0)
                 val minutes = secondsInt / 60
                 val secs = secondsInt % 60
                 val timeSurvivedFormatted = String.format("%02d:%02d", minutes, secs)
+
+                val rankName = when (rankRes) {
+                    R.string.rank_intern -> if (isIndonesian) "Magang Kepatuhan" else "Compliance Intern"
+                    R.string.rank_auditor -> if (isIndonesian) "Auditor Muda" else "Junior Auditor"
+                    R.string.rank_officer -> if (isIndonesian) "Petugas Kepatuhan" else "Compliance Officer"
+                    R.string.rank_risk_lead -> if (isIndonesian) "Ketua Manajemen Risiko" else "Senior Risk Lead"
+                    R.string.rank_director -> if (isIndonesian) "Direktur Kepatuhan Utama" else "Chief Compliance Director"
+                    else -> stringResource(rankRes)
+                }
+                val levelName = when (level.levelNumber) {
+                    1 -> if (isIndonesian) "PENGENDALIAN INTERNAL" else "INTERNAL CONTROLS"
+                    2 -> if (isIndonesian) "KLAIM & FRAUD" else "CLAIMS & FRAUD"
+                    3 -> if (isIndonesian) "DATA & PRIVASI" else "DATA & PRIVACY"
+                    4 -> if (isIndonesian) "KEJAHATAN FINANSIAL" else "FINANCIAL CRIMES"
+                    else -> stringResource(level.nameRes).uppercase()
+                }
 
                 if (isLandscape) {
                     // Landscape two-column layout: Left = Summary & Actions, Right = Neutralized Items
@@ -187,7 +204,7 @@ fun ResultScreen(
                                         border = BorderStroke(1.dp, Color(0x6664B5F6))
                                     ) {
                                         Text(
-                                            text = stringResource(level.nameRes).uppercase(),
+                                            text = levelName,
                                             color = Color(0xFF90CAF9),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Black,
@@ -203,7 +220,7 @@ fun ResultScreen(
                                             border = BorderStroke(1.dp, Color(0x6600E5FF))
                                         ) {
                                             Text(
-                                                text = stringResource(R.string.result_time_survived, timeSurvivedFormatted),
+                                                text = if (isIndonesian) "BERTAHAN: $timeSurvivedFormatted" else "SURVIVED: $timeSurvivedFormatted",
                                                 color = Color(0xFF80D8FF),
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.Bold,
@@ -236,11 +253,11 @@ fun ResultScreen(
                                 ) {
                                     Column {
                                         Text(
-                                            text = stringResource(R.string.result_title).uppercase(),
+                                            text = if (isIndonesian) "LAPORAN TUGAS" else "SHIFT REPORT",
                                             style = ShiftCompleteTitleStyle.copy(fontSize = 19.sp)
                                         )
                                         Text(
-                                            text = "${stringResource(R.string.result_rank_prefix)}: ${stringResource(rankRes)}",
+                                            text = "${if (isIndonesian) "PANGKAT PETUGAS" else "OFFICER RANK"}: $rankName",
                                             style = MaterialTheme.typography.bodySmall.copy(
                                                 fontWeight = FontWeight.Medium,
                                                 fontSize = 12.sp
@@ -252,9 +269,9 @@ fun ResultScreen(
                                     Column(horizontalAlignment = Alignment.End) {
                                         Text(
                                             text = if (isNewHighScore) {
-                                                stringResource(R.string.result_new_high_score).uppercase()
+                                                if (isIndonesian) "REKOR SKOR BARU!" else "NEW HIGH SCORE!"
                                             } else {
-                                                stringResource(R.string.result_final_score_label).uppercase()
+                                                if (isIndonesian) "SKOR AKHIR" else "FINAL SCORE"
                                             },
                                             style = HudLabelStyle.copy(
                                                 color = GoldSecondary,
@@ -287,13 +304,13 @@ fun ResultScreen(
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text(
-                                            text = stringResource(R.string.result_traps_avoided_label, trapsAvoided),
+                                            text = if (isIndonesian) "Berhasil Dihindari: $trapsAvoided" else "Correctly Avoided: $trapsAvoided",
                                             color = Color(0xFF4FCB8F),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Bold
                                         )
                                         Text(
-                                            text = stringResource(R.string.result_traps_sliced_label, trapsSliced),
+                                            text = if (isIndonesian) "Keliru Ditebas: $trapsSliced (-10 poin)" else "Mistakenly Sliced: $trapsSliced (-10 pts)",
                                             color = if (trapsSliced > 0) Color(0xFFFF5252) else Color(0xFFB0BEC5),
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Bold
@@ -331,7 +348,7 @@ fun ResultScreen(
                                     ) {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Text(
-                                                text = stringResource(R.string.result_play_again).uppercase(),
+                                                text = if (isIndonesian) "MAIN LAGI" else "PLAY AGAIN",
                                                 fontSize = 13.sp,
                                                 fontWeight = FontWeight.Black,
                                                 color = BackgroundDark
@@ -368,7 +385,7 @@ fun ResultScreen(
                                         Icon(Icons.Default.FormatListNumbered, contentDescription = null, modifier = Modifier.size(15.dp))
                                         Spacer(modifier = Modifier.width(4.dp))
                                         Text(
-                                            text = stringResource(R.string.level_select_title).uppercase(),
+                                            text = if (isIndonesian) "PILIH MISI" else "SELECT MISSION",
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 11.sp
                                         )
@@ -391,7 +408,7 @@ fun ResultScreen(
                                         Icon(Icons.Default.Home, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(15.dp))
                                         Spacer(modifier = Modifier.width(4.dp))
                                         Text(
-                                            text = stringResource(R.string.result_main_menu),
+                                            text = if (isIndonesian) "MENU UTAMA" else "MAIN MENU",
                                             fontWeight = FontWeight.Bold,
                                             color = TextPrimary,
                                             fontSize = 11.sp
@@ -415,7 +432,7 @@ fun ResultScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = stringResource(R.string.result_recap_heading).uppercase(),
+                                    text = if (isIndonesian) "PELANGGARAN DINETRALISIR" else "VIOLATIONS NEUTRALIZED",
                                     style = HudLabelStyle.copy(letterSpacing = 1.2.sp, fontSize = 11.sp),
                                     color = GoldSecondary
                                 )
@@ -458,18 +475,29 @@ fun ResultScreen(
                             ) {
                                 if (slicedSummary.isNotEmpty()) {
                                     items(slicedSummary, key = { it.category.id }) { record ->
-                                        DebriefViolationCard(category = record.category, count = record.count)
+                                        DebriefViolationCard(
+                                            category = record.category,
+                                            count = record.count,
+                                            currentLanguage = currentLanguage
+                                        )
                                     }
                                 } else {
                                     item {
                                         Text(
-                                            text = stringResource(R.string.result_recap_empty),
+                                            text = if (isIndonesian)
+                                                "Tidak ada pelanggaran yang ditebas ronde ini. Pelajari kategori dan tetap waspada!"
+                                            else
+                                                "No violations sliced this round. Study the categories below and stay sharp!",
                                             style = MaterialTheme.typography.bodySmall,
                                             color = TextMuted
                                         )
                                     }
                                     items(ComplianceCategory.VIOLATIONS, key = { it.id }) { cat ->
-                                        DebriefViolationCard(category = cat, count = 0)
+                                        DebriefViolationCard(
+                                            category = cat,
+                                            count = 0,
+                                            currentLanguage = currentLanguage
+                                        )
                                     }
                                 }
                             }
@@ -484,7 +512,7 @@ fun ResultScreen(
                     ) {
                         item {
                             Text(
-                                text = stringResource(level.nameRes).uppercase(),
+                                text = levelName,
                                 color = Color(0xFF90CAF9),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Black
@@ -496,7 +524,7 @@ fun ResultScreen(
                                 border = BorderStroke(1.dp, Color(0x6600E5FF))
                             ) {
                                 Text(
-                                    text = stringResource(R.string.result_time_survived, timeSurvivedFormatted),
+                                    text = if (isIndonesian) "BERTAHAN: $timeSurvivedFormatted" else "SURVIVED: $timeSurvivedFormatted",
                                     color = Color(0xFF80D8FF),
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
@@ -512,7 +540,11 @@ fun ResultScreen(
 
                         if (slicedSummary.isNotEmpty()) {
                             items(slicedSummary, key = { it.category.id }) { record ->
-                                DebriefViolationCard(category = record.category, count = record.count)
+                                DebriefViolationCard(
+                                    category = record.category,
+                                    count = record.count,
+                                    currentLanguage = currentLanguage
+                                )
                             }
                         }
 
@@ -524,7 +556,7 @@ fun ResultScreen(
                                     .height(48.dp)
                                     .testTag("play_again_button")
                             ) {
-                                Text(text = stringResource(R.string.result_play_again).uppercase())
+                                Text(text = if (isIndonesian) "MAIN LAGI" else "PLAY AGAIN")
                             }
                         }
                     }
@@ -537,8 +569,10 @@ fun ResultScreen(
 @Composable
 private fun DebriefViolationCard(
     category: ComplianceCategory,
-    count: Int
+    count: Int,
+    currentLanguage: String = "en"
 ) {
+    val isId = currentLanguage == "in" || currentLanguage == "id"
     val categoryColor = when {
         category.isBonus -> Color(0xFF00E5FF)
         category.isTrap -> Color(0xFFFF7043)
@@ -552,6 +586,10 @@ private fun DebriefViolationCard(
         category.isViolation -> Color(0xFF3E2805)
         else -> Color(0xFF0C2C4D)
     }
+
+    val displayName = category.getDisplayName(currentLanguage)
+    val explanation = category.getExplanation(currentLanguage)
+    val neutralizedSuffix = if (isId) "dinetralisir" else "neutralized"
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -576,7 +614,7 @@ private fun DebriefViolationCard(
             ) {
                 Image(
                     painter = painterResource(id = category.iconRes),
-                    contentDescription = stringResource(category.displayNameRes),
+                    contentDescription = displayName,
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -590,7 +628,7 @@ private fun DebriefViolationCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(category.displayNameRes),
+                        text = displayName,
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
                         color = Color.White,
                         fontWeight = FontWeight.Bold
@@ -603,7 +641,7 @@ private fun DebriefViolationCard(
                             border = BorderStroke(1.dp, GoldSecondary.copy(alpha = 0.6f))
                         ) {
                             Text(
-                                text = "×$count ${stringResource(R.string.result_neutralized_suffix)}",
+                                text = "×$count $neutralizedSuffix",
                                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
                                 color = GoldSecondary,
                                 fontWeight = FontWeight.Bold,
@@ -616,7 +654,7 @@ private fun DebriefViolationCard(
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = stringResource(category.explanationRes),
+                    text = explanation,
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
                     color = TextSecondary,
                     lineHeight = 14.sp
