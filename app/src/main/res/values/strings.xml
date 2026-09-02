@@ -92,10 +92,10 @@
     <string name="cat_honest_mistake">Honest Mistake</string>
 
     <!-- Category Explanations (Compliance Value Reinforcement) -->
-    <string name="exp_bribery">Giving or accepting anything of value to improperly influence an official decision violates anti-corruption laws (FCPA/UKBA).</string>
-    <string name="exp_fraud">Deceptive manipulation of corporate records, misleading signatures, or dishonest accounting misrepresents organizational truth.</string>
-    <string name="exp_money_laundering">Structuring cash transactions to dodge reporting thresholds is a classic red flag under FATF international recommendations.</string>
-    <string name="exp_data_breach">Exposing confidential, customer, or proprietary enterprise data violates privacy regulations (GDPR/PDPA) and destroys public trust.</string>
+    <string name="exp_bribery">UU No. 20 Tahun 2001 Tentang Tindak Pidana Korupsi: Memberi atau menerima suap/gratifikasi melanggar integritas dan ketentuan hukum tindak pidana korupsi.</string>
+    <string name="exp_fraud">Manipulasi catatan perusahaan, pemalsuan tanda tangan, atau pembukuan fiktif merusak kebenaran dan integritas organisasi.</string>
+    <string name="exp_money_laundering">Regulasi APU-PPT (Anti Pencucian Uang dan Pencegahan Pendanaan Terorisme): Menata transaksi mencurigakan untuk menyamarkan asal dana kejahatan.</string>
+    <string name="exp_data_breach">UU No. 27 Tahun 2022 Tentang Pelindungan Data Pribadi: Membuka data rahasia/pribadi tanpa otorisasi sah melanggar hukum privasi.</string>
     <string name="exp_systemic_corruption">Deeply entrenched abuse of entrusted power threatens institutional integrity and creates severe corporate criminal liability.</string>
     <string name="exp_official_document">Authorized corporate records must be preserved and processed through designated compliance governance channels.</string>
     <string name="exp_verified_approval">Proper dual-control sign-offs and management approvals ensure accountability and checks across all business decisions.</string>
@@ -301,4 +301,5 @@
     <string name="menu_footer_features">Score-Based Difficulty • Combos up to 4x • Cloud Sync</string>
     <string name="splash_tap_to_skip">Tap anywhere to continue</string>
     <string name="splash_content_desc">Bang Patuh Compliance Ninja Flash Screen</string>
+    <string name="splash_corporate_desc">Tokio Marine Insurance Group - Presented by Digital Strategy PT Tokio Marine Indonesia</string>
 </resources>

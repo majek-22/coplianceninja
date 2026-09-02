@@ -572,47 +572,48 @@ private fun MissionBriefingDialog(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Header Mission Image
+                // Mission Environment Preview Banner
                 Box(
                     modifier = Modifier
-                        .size(76.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            Brush.radialGradient(
-                                listOf(Color(0x4464B5F6), Color(0x22132238))
-                            )
-                        )
-                        .border(1.5.dp, Color(0x6664B5F6), RoundedCornerShape(20.dp)),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .height(115.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .border(1.2.dp, Color(0x5564B5F6), RoundedCornerShape(16.dp))
                 ) {
                     Image(
-                        painter = painterResource(id = level.iconRes),
+                        painter = painterResource(id = level.backgroundRes),
                         contentDescription = stringResource(level.nameRes),
-                        modifier = Modifier
-                            .size(62.dp)
-                            .alpha(if (isUnlocked) 1f else 0.45f),
-                        contentScale = ContentScale.Fit
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
-                    if (!isUnlocked) {
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xDD101827))
-                                .border(1.dp, Color(0x88FFFFFF), CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = "Locked",
-                                tint = Color(0xFFFFC857),
-                                modifier = Modifier.size(15.dp)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                Brush.verticalGradient(
+                                    listOf(Color.Transparent, Color(0xBB101827))
+                                )
                             )
-                        }
+                    )
+                    // Level badge chip in top-right
+                    Surface(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp),
+                        shape = RoundedCornerShape(6.dp),
+                        color = Color(0xCC0D1B2A)
+                    ) {
+                        Text(
+                            text = "TIER ${level.levelNumber}",
+                            color = GoldSecondary,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Black,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
                     text = stringResource(level.nameRes),

@@ -92,10 +92,10 @@
     <string name="cat_honest_mistake">Kekhilafan Administratif</string>
 
     <!-- Category Explanations (Compliance Value Reinforcement) -->
-    <string name="exp_bribery">Memberi atau menerima barang berharga untuk mempengaruhi keputusan resmi melanggar undang-undang anti-korupsi.</string>
-    <string name="exp_fraud">Manipulasi catatan perusahaan, pemalsuan tanda tangan, atau pembukuan fiktif merusak kebenaran organisasi.</string>
-    <string name="exp_money_laundering">Menata transaksi tunai untuk menghindari ambang pelaporan adalah bendera merah menurut standar internasional FATF.</string>
-    <string name="exp_data_breach">Membuka data rahasia perusahaan atau pelanggan melanggar undang-undang privasi (PDP) dan merusak reputasi publik.</string>
+    <string name="exp_bribery">UU No. 20 Tahun 2001 Tentang Tindak Pidana Korupsi: Memberi atau menerima suap/gratifikasi melanggar integritas dan ketentuan hukum tindak pidana korupsi.</string>
+    <string name="exp_fraud">Manipulasi catatan perusahaan, pemalsuan tanda tangan, atau pembukuan fiktif merusak kebenaran dan integritas organisasi.</string>
+    <string name="exp_money_laundering">Regulasi APU-PPT (Anti Pencucian Uang dan Pencegahan Pendanaan Terorisme): Menata transaksi mencurigakan untuk menyamarkan asal dana kejahatan.</string>
+    <string name="exp_data_breach">UU No. 27 Tahun 2022 Tentang Pelindungan Data Pribadi: Membuka data rahasia/pribadi tanpa otorisasi sah melanggar hukum privasi.</string>
     <string name="exp_systemic_corruption">Penyalahgunaan wewenang secara terstruktur dan terlembaga merusak integritas dan membawa pertanggungjawaban pidana berat.</string>
     <string name="exp_official_document">Catatan resmi perusahaan harus dijaga dan diproses melalui saluran tata kelola kepatuhan yang sah.</string>
     <string name="exp_verified_approval">Persetujuan ganda dan tanda tangan manajemen yang sah memastikan akuntabilitas atas setiap keputusan bisnis.</string>
@@ -301,4 +301,5 @@
     <string name="menu_footer_features">Tingkat Kesulitan Otomatis • Kombo hingga 4x • Sinkronisasi Cloud</string>
     <string name="splash_tap_to_skip">Ketuk di mana saja untuk lanjut</string>
     <string name="splash_content_desc">Layar Pembuka Bang Patuh Compliance Ninja</string>
+    <string name="splash_corporate_desc">Tokio Marine Insurance Group - Presented by Digital Strategy PT Tokio Marine Indonesia</string>
 </resources>

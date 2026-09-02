@@ -41,6 +41,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -95,6 +98,8 @@ fun ResultScreen(
     trapsSliced: Int,
     slicedSummary: List<SlicedCategoryRecord>,
     elapsedSeconds: Float = 0f,
+    currentLanguage: String = "en",
+    onToggleLanguage: () -> Unit = {},
     onPlayAgain: () -> Unit,
     onSelectLevel: () -> Unit,
     onReturnToMenu: () -> Unit,
@@ -402,12 +407,50 @@ fun ResultScreen(
                                 .weight(1f)
                                 .fillMaxHeight()
                         ) {
-                            Text(
-                                text = stringResource(R.string.result_recap_heading).uppercase(),
-                                style = HudLabelStyle.copy(letterSpacing = 1.2.sp, fontSize = 11.sp),
-                                color = GoldSecondary,
-                                modifier = Modifier.padding(bottom = 6.dp)
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 6.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.result_recap_heading).uppercase(),
+                                    style = HudLabelStyle.copy(letterSpacing = 1.2.sp, fontSize = 11.sp),
+                                    color = GoldSecondary
+                                )
+
+                                // Circular Language Toggle (EN / ID) matching Main Menu
+                                Box(
+                                    modifier = Modifier
+                                        .size(28.dp)
+                                        .clickable(onClick = onToggleLanguage)
+                                        .testTag("result_lang_btn"),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(26.dp)
+                                            .clip(CircleShape)
+                                            .background(Color(0x44000000))
+                                            .border(1.2.dp, GoldSecondary.copy(alpha = 0.7f), CircleShape),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Crossfade(
+                                            targetState = currentLanguage,
+                                            animationSpec = tween(250),
+                                            label = "result_language_toggle_crossfade"
+                                        ) { lang ->
+                                            Text(
+                                                text = if (lang == "in" || lang == "id") "ID" else "EN",
+                                                color = GoldSecondary,
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.Black
+                                            )
+                                        }
+                                    }
+                                }
+                            }
 
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
@@ -496,7 +539,20 @@ private fun DebriefViolationCard(
     category: ComplianceCategory,
     count: Int
 ) {
-    val borderColor = Color(category.borderColor)
+    val categoryColor = when {
+        category.isBonus -> Color(0xFF00E5FF)
+        category.isTrap -> Color(0xFFFF7043)
+        category.isViolation -> Color(0xFFFFC857)
+        else -> Color(0xFF64B5F6)
+    }
+
+    val discBgColor = when {
+        category.isBonus -> Color(0xFF043842)
+        category.isTrap -> Color(0xFF45190C)
+        category.isViolation -> Color(0xFF3E2805)
+        else -> Color(0xFF0C2C4D)
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -512,10 +568,10 @@ private fun DebriefViolationCard(
             Box(
                 modifier = Modifier
                     .size(38.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(borderColor.copy(alpha = 0.2f))
-                    .border(1.dp, borderColor.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
-                    .padding(4.dp),
+                    .clip(CircleShape)
+                    .background(discBgColor)
+                    .border(1.5.dp, categoryColor, CircleShape)
+                    .padding(5.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Image(

@@ -317,30 +317,25 @@ fun MainMenuScreen(
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.Start
                             ) {
-                                Surface(
-                                    shape = RoundedCornerShape(8.dp),
-                                    color = Color(0x33FFC857),
-                                    border = BorderStroke(1.dp, Color(0x66FFC857)),
-                                    modifier = Modifier.padding(bottom = 3.dp)
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.menu_subtitle).uppercase(),
-                                        color = GoldSecondary,
-                                        fontSize = 9.sp,
-                                        fontWeight = FontWeight.Black,
-                                        letterSpacing = 1.2.sp,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                                    )
-                                }
+                                Text(
+                                    text = "BANG PATUH",
+                                    color = Color(0xFFBC851C),
+                                    fontSize = 23.sp,
+                                    fontWeight = FontWeight.Black,
+                                    letterSpacing = 1.2.sp
+                                )
+
+                                Spacer(modifier = Modifier.height(2.dp))
 
                                 Text(
                                     text = stringResource(R.string.menu_title),
                                     style = MaterialTheme.typography.displayLarge.copy(
-                                        fontSize = 26.sp,
-                                        lineHeight = 30.sp
+                                        fontSize = 17.sp,
+                                        lineHeight = 22.sp
                                     ),
-                                    color = TextPrimary,
-                                    fontWeight = FontWeight.Black,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 0.8.sp,
                                     modifier = Modifier.graphicsLayer { translationY = floatingOffset }
                                 )
 
@@ -445,11 +440,22 @@ fun MainMenuScreen(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
+                        text = "BANG PATUH",
+                        color = Color(0xFFBC851C),
+                        fontSize = 23.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 1.2.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
                         text = stringResource(R.string.menu_title),
-                        style = MaterialTheme.typography.displayLarge.copy(fontSize = 30.sp),
-                        color = TextPrimary,
+                        style = MaterialTheme.typography.displayLarge.copy(fontSize = 17.sp),
+                        color = Color.White,
                         textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Black
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.8.sp
                     )
 
                     // High score pill

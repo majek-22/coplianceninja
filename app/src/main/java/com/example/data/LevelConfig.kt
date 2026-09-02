@@ -82,7 +82,7 @@ data class LevelConfig(
                 nameRes = R.string.level2_name,
                 descRes = R.string.level2_desc,
                 iconRes = R.drawable.fraud,
-                backgroundRes = R.drawable.bg_finance_crimes,
+                backgroundRes = R.drawable.bg_claims_fraud,
                 durationSeconds = 65,
                 oneStarScore = 120,
                 twoStarsScore = 250,

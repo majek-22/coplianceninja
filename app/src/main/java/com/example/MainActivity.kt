@@ -246,6 +246,8 @@ fun ComplianceSlicerApp(
                     trapsSliced = uiState.trapsSliced,
                     slicedSummary = uiState.slicedCategoriesSummary,
                     elapsedSeconds = uiState.timeRemaining,
+                    currentLanguage = uiState.currentLanguage,
+                    onToggleLanguage = { viewModel.toggleLanguage { activity?.recreate() } },
                     onPlayAgain = { viewModel.startMission(uiState.selectedLevel) },
                     onSelectLevel = { viewModel.navigateTo(GamePhase.LEVEL_SELECT) },
                     onReturnToMenu = { viewModel.navigateTo(GamePhase.MENU) }
