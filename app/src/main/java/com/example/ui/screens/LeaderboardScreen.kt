@@ -542,13 +542,13 @@ private fun MyStatsTab(
                         }
 
                         Row {
-                            for (i in 1..3) {
+                            for (i in 1..5) {
                                 val earned = i <= stars
                                 Icon(
                                     imageVector = if (earned) Icons.Default.Star else Icons.Default.StarBorder,
                                     contentDescription = null,
                                     tint = if (earned) GoldSecondary else Color(0x55FFFFFF),
-                                    modifier = Modifier.size(16.dp)
+                                    modifier = Modifier.size(14.dp)
                                 )
                             }
                         }

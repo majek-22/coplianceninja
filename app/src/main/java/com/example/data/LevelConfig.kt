@@ -37,6 +37,8 @@ data class LevelConfig(
     val oneStarScore: Int,
     val twoStarsScore: Int,
     val threeStarsScore: Int,
+    val fourStarsScore: Int,
+    val fiveStarsScore: Int,
     val allowedViolations: List<ComplianceCategory>,
     val allowedLegitimate: List<ComplianceCategory>,
     val allowedTraps: List<ComplianceCategory>,
@@ -44,6 +46,8 @@ data class LevelConfig(
 ) {
     fun calculateStars(score: Int): Int {
         return when {
+            score >= fiveStarsScore -> 5
+            score >= fourStarsScore -> 4
             score >= threeStarsScore -> 3
             score >= twoStarsScore -> 2
             score >= oneStarScore -> 1
@@ -60,9 +64,11 @@ data class LevelConfig(
                 iconRes = R.drawable.compliance_shield,
                 backgroundRes = R.drawable.bg_internal_controls,
                 durationSeconds = 60,
-                oneStarScore = 80,
-                twoStarsScore = 180,
-                threeStarsScore = 300,
+                oneStarScore = 300,
+                twoStarsScore = 600,
+                threeStarsScore = 900,
+                fourStarsScore = 1200,
+                fiveStarsScore = 1500,
                 allowedViolations = listOf(
                     ComplianceCategory.BRIBERY,
                     ComplianceCategory.FRAUD
@@ -84,9 +90,11 @@ data class LevelConfig(
                 iconRes = R.drawable.fraud,
                 backgroundRes = R.drawable.bg_claims_fraud,
                 durationSeconds = 65,
-                oneStarScore = 120,
-                twoStarsScore = 250,
-                threeStarsScore = 450,
+                oneStarScore = 700,
+                twoStarsScore = 1300,
+                threeStarsScore = 1900,
+                fourStarsScore = 2500,
+                fiveStarsScore = 3200,
                 allowedViolations = listOf(
                     ComplianceCategory.BRIBERY,
                     ComplianceCategory.FRAUD,
@@ -109,9 +117,11 @@ data class LevelConfig(
                 iconRes = R.drawable.data_breach,
                 backgroundRes = R.drawable.bg_data_privacy,
                 durationSeconds = 70,
-                oneStarScore = 160,
-                twoStarsScore = 350,
-                threeStarsScore = 600,
+                oneStarScore = 1500,
+                twoStarsScore = 2600,
+                threeStarsScore = 3800,
+                fourStarsScore = 5000,
+                fiveStarsScore = 6200,
                 allowedViolations = listOf(
                     ComplianceCategory.BRIBERY,
                     ComplianceCategory.FRAUD,
@@ -139,9 +149,11 @@ data class LevelConfig(
                 iconRes = R.drawable.systemic_corruption,
                 backgroundRes = R.drawable.bg_finance_crimes,
                 durationSeconds = 75,
-                oneStarScore = 220,
-                twoStarsScore = 450,
-                threeStarsScore = 750,
+                oneStarScore = 2500,
+                twoStarsScore = 4500,
+                threeStarsScore = 6500,
+                fourStarsScore = 8500,
+                fiveStarsScore = 11000,
                 allowedViolations = ComplianceCategory.ALL_VIOLATIONS,
                 allowedLegitimate = ComplianceCategory.LEGITIMATE,
                 allowedTraps = ComplianceCategory.TRAPS,

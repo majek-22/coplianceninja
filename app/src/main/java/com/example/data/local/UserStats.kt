@@ -54,8 +54,22 @@ data class UserStats(
     }
 
     fun isLevelUnlocked(level: Int): Boolean {
-        if (level <= 1) return true
-        return getStarsForLevel(level - 1) > 0 || getBestForLevel(level - 1) > 0
+        return when (level) {
+            1 -> true
+            2 -> level1Best >= 1200
+            3 -> level1Best >= 1200 && level2Best >= 2500
+            4 -> level1Best >= 1200 && level2Best >= 2500 && level3Best >= 5000
+            else -> false
+        }
+    }
+
+    fun getUnlockScoreRequired(level: Int): Int {
+        return when (level) {
+            2 -> 1200
+            3 -> 2500
+            4 -> 5000
+            else -> 0
+        }
     }
 
     fun getRankTitle(): String {

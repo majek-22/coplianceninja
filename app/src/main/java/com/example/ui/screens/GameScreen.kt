@@ -640,7 +640,7 @@ private fun FlyingItemComposable(
                 }
             }
 
-            // Unrotated floating label badge below token for instant readability
+            // Unrotated floating label badge below token for instant readability (Clean & compact bold label)
             val rawText = androidx.compose.ui.res.stringResource(item.category.displayNameRes)
             val words = rawText.split(" ").filter { it.isNotBlank() }
             val formattedText = if (words.size >= 2) words.joinToString("\n") else rawText
@@ -648,26 +648,26 @@ private fun FlyingItemComposable(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = 10.dp)
+                    .offset(y = 9.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(discBgColor.copy(alpha = 0.95f))
+                    .background(Color(0xF0050D18))
                     .border(
-                        width = 0.8.dp,
+                        width = 1.dp,
                         color = categoryColor,
                         shape = RoundedCornerShape(4.dp)
                     )
-                    .padding(horizontal = 4.dp, vertical = 1.dp),
+                    .padding(horizontal = 4.dp, vertical = 1.5.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = formattedText,
+                    text = formattedText.uppercase(),
                     fontSize = 7.sp,
                     lineHeight = 8.5.sp,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Bold,
                     letterSpacing = 0.2.sp,
                     textAlign = TextAlign.Center,
                     color = categoryColor,
-                    maxLines = 4,
+                    maxLines = 3,
                     softWrap = true
                 )
             }

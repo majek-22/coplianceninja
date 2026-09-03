@@ -362,7 +362,21 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     // NAVIGATION
     // =========================================================================
 
+    private var previousPhaseBeforeGlossary: GamePhase = GamePhase.MENU
+
+    fun openGlossary() {
+        previousPhaseBeforeGlossary = _uiState.value.phase
+        navigateTo(GamePhase.GLOSSARY)
+    }
+
+    fun closeGlossary() {
+        navigateTo(previousPhaseBeforeGlossary)
+    }
+
     fun navigateTo(phase: GamePhase) {
+        if (phase == GamePhase.GLOSSARY && _uiState.value.phase != GamePhase.GLOSSARY) {
+            previousPhaseBeforeGlossary = _uiState.value.phase
+        }
         _uiState.value = _uiState.value.copy(phase = phase)
         when (phase) {
             GamePhase.PLAYING -> musicManager.playGameplayTheme()

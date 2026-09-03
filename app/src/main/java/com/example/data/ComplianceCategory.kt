@@ -25,7 +25,7 @@ enum class ComplianceCategory(
     val glowColor: Long = borderColor
 ) {
     // =========================================================================
-    // Violations (MUST SLICE: +10 pts * comboMultiplier) — Warm Orange/Coral
+    // Violations (MUST SLICE: +10 pts * comboMultiplier) — Gold/Amber (0xFFFFC857 / 0xFF3E2805)
     // =========================================================================
     BRIBERY(
         id = "bribery",
@@ -34,8 +34,8 @@ enum class ComplianceCategory(
         basePoints = 10,
         explanationRes = R.string.exp_bribery,
         iconRes = R.drawable.bribery,
-        badgeColor = 0xFFD97706,
-        borderColor = 0xFFF59E0B
+        badgeColor = 0xFF3E2805,
+        borderColor = 0xFFFFC857
     ),
     FRAUD(
         id = "fraud",
@@ -44,8 +44,8 @@ enum class ComplianceCategory(
         basePoints = 10,
         explanationRes = R.string.exp_fraud,
         iconRes = R.drawable.fraud,
-        badgeColor = 0xFFEA580C,
-        borderColor = 0xFFFB923C
+        badgeColor = 0xFF3E2805,
+        borderColor = 0xFFFFC857
     ),
     MONEY_LAUNDERING(
         id = "money_laundering",
@@ -54,8 +54,8 @@ enum class ComplianceCategory(
         basePoints = 10,
         explanationRes = R.string.exp_money_laundering,
         iconRes = R.drawable.money_laundering,
-        badgeColor = 0xFFC2410C,
-        borderColor = 0xFFF97316
+        badgeColor = 0xFF3E2805,
+        borderColor = 0xFFFFC857
     ),
     DATA_BREACH(
         id = "data_breach",
@@ -64,8 +64,8 @@ enum class ComplianceCategory(
         basePoints = 10,
         explanationRes = R.string.exp_data_breach,
         iconRes = R.drawable.data_breach,
-        badgeColor = 0xFFBE185D,
-        borderColor = 0xFFF472B6
+        badgeColor = 0xFF3E2805,
+        borderColor = 0xFFFFC857
     ),
     SYSTEMIC_CORRUPTION(
         id = "systemic_corruption",
@@ -74,8 +74,8 @@ enum class ComplianceCategory(
         basePoints = 25, // High-value rare violation
         explanationRes = R.string.exp_systemic_corruption,
         iconRes = R.drawable.systemic_corruption,
-        badgeColor = 0xFF6D28D9,
-        borderColor = 0xFFA78BFA
+        badgeColor = 0xFF3E2805,
+        borderColor = 0xFFFFC857
     ),
     INSIDER_TRADING(
         id = "insider_trading",
@@ -109,7 +109,7 @@ enum class ComplianceCategory(
     ),
 
     // =========================================================================
-    // Legitimate / Do-not-slice (AVOID: Slicing costs 1 life) — Soft Blue/Sky
+    // Legitimate / Do-not-slice (AVOID: Slicing costs 1 life) — Sky Blue (0xFF64B5F6 / 0xFF0C2C4D)
     // =========================================================================
     OFFICIAL_DOCUMENT(
         id = "official_doc",
@@ -118,8 +118,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_official_document,
         iconRes = R.drawable.official_document,
-        badgeColor = 0xFF1D4ED8,
-        borderColor = 0xFF60A5FA
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
     VERIFIED_APPROVAL(
         id = "verified_approval",
@@ -128,8 +128,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_verified_approval,
         iconRes = R.drawable.verified_approval,
-        badgeColor = 0xFF0284C7,
-        borderColor = 0xFF38BDF8
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
     VALID_PARTNERSHIP(
         id = "valid_partnership",
@@ -138,8 +138,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_valid_partnership,
         iconRes = R.drawable.valid_partnership,
-        badgeColor = 0xFF0E7490,
-        borderColor = 0xFF22D3EE
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
     CERTIFICATION(
         id = "certification",
@@ -148,8 +148,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_certification,
         iconRes = R.drawable.certification,
-        badgeColor = 0xFF2563EB,
-        borderColor = 0xFF93C5FD
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
     VERIFIED_INVOICE(
         id = "verified_invoice",
@@ -158,8 +158,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_verified_invoice,
         iconRes = R.drawable.verified_invoice,
-        badgeColor = 0xFF0369A1,
-        borderColor = 0xFF7DD3FC
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
     COMPLIANCE_AUDIT(
         id = "compliance_audit",
@@ -168,8 +168,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_compliance_audit,
         iconRes = R.drawable.official_document,
-        badgeColor = 0xFF1E40AF,
-        borderColor = 0xFF93C5FD
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
     ETHICS_TRAINING(
         id = "ethics_training",
@@ -178,8 +178,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_ethics_training,
         iconRes = R.drawable.certification,
-        badgeColor = 0xFF1E3A8A,
-        borderColor = 0xFF60A5FA
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
     TRANSPARENCY_REPORT(
         id = "transparency_report",
@@ -188,12 +188,12 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_transparency_report,
         iconRes = R.drawable.verified_approval,
-        badgeColor = 0xFF075985,
-        borderColor = 0xFF38BDF8
+        badgeColor = 0xFF0C2C4D,
+        borderColor = 0xFF64B5F6
     ),
 
     // =========================================================================
-    // Traps (Decoys - Avoid: -10 pts, resets combo, no life lost) — Soft Purple
+    // Traps (Decoys - Avoid: -10 pts, resets combo, no life lost) — Coral Orange (0xFFFF7043 / 0xFF45190C)
     // =========================================================================
     FALSE_ALARM(
         id = "false_alarm",
@@ -203,8 +203,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_false_alarm,
         iconRes = R.drawable.false_alarm,
-        badgeColor = 0xFF7E22CE,
-        borderColor = 0xFFC084FC
+        badgeColor = 0xFF45190C,
+        borderColor = 0xFFFF7043
     ),
     UNVERIFIED_RUMOR(
         id = "unverified_rumor",
@@ -214,8 +214,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_unverified_rumor,
         iconRes = R.drawable.unverified_rumor,
-        badgeColor = 0xFF6B21A8,
-        borderColor = 0xFFA855F7
+        badgeColor = 0xFF45190C,
+        borderColor = 0xFFFF7043
     ),
     HONEST_MISTAKE(
         id = "honest_mistake",
@@ -225,8 +225,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_honest_mistake,
         iconRes = R.drawable.honest_mistake,
-        badgeColor = 0xFF86198F,
-        borderColor = 0xFFE879F9
+        badgeColor = 0xFF45190C,
+        borderColor = 0xFFFF7043
     ),
     PHISHING_BAIT(
         id = "phishing_bait",
@@ -236,8 +236,8 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_phishing_bait,
         iconRes = R.drawable.data_breach,
-        badgeColor = 0xFF581C87,
-        borderColor = 0xFFD8B4FE
+        badgeColor = 0xFF45190C,
+        borderColor = 0xFFFF7043
     ),
     MISFILED_MEMO(
         id = "misfiled_memo",
@@ -247,12 +247,12 @@ enum class ComplianceCategory(
         basePoints = 0,
         explanationRes = R.string.exp_misfiled_memo,
         iconRes = R.drawable.honest_mistake,
-        badgeColor = 0xFF701A75,
-        borderColor = 0xFFF0ABFC
+        badgeColor = 0xFF45190C,
+        borderColor = 0xFFFF7043
     ),
 
     // =========================================================================
-    // Bonus Items (~5% spawn chance: +1 life, +25 pts) — Soft Gold / Amber
+    // Bonus Items (~5% spawn chance: +1 life, +25 pts) — Electric Cyan (0xFF00E5FF / 0xFF043842)
     // =========================================================================
     SHIELD(
         id = "shield",
@@ -262,8 +262,8 @@ enum class ComplianceCategory(
         basePoints = 25,
         explanationRes = R.string.exp_shield,
         iconRes = R.drawable.compliance_shield,
-        badgeColor = 0xFFCA8A04,
-        borderColor = 0xFFFDE047
+        badgeColor = 0xFF043842,
+        borderColor = 0xFF00E5FF
     ),
     WHISTLEBLOWER(
         id = "whistleblower",
@@ -273,8 +273,8 @@ enum class ComplianceCategory(
         basePoints = 25,
         explanationRes = R.string.exp_whistleblower,
         iconRes = R.drawable.bonus_shield,
-        badgeColor = 0xFFD97706,
-        borderColor = 0xFFFEF08A
+        badgeColor = 0xFF043842,
+        borderColor = 0xFF00E5FF
     ),
     STAR_AUDITOR(
         id = "star_auditor",
@@ -284,8 +284,8 @@ enum class ComplianceCategory(
         basePoints = 30,
         explanationRes = R.string.exp_star_auditor,
         iconRes = R.drawable.bonus_shield,
-        badgeColor = 0xFFB45309,
-        borderColor = 0xFFFACC15
+        badgeColor = 0xFF043842,
+        borderColor = 0xFF00E5FF
     );
 
     val badgeShape: BadgeShape
@@ -297,11 +297,19 @@ enum class ComplianceCategory(
         }
 
     companion object {
-        val VIOLATIONS = entries.filter { it.isViolation && it != SYSTEMIC_CORRUPTION }
-        val ALL_VIOLATIONS = entries.filter { it.isViolation }
-        val LEGITIMATE = entries.filter { !it.isViolation && !it.isBonus && !it.isTrap }
-        val TRAPS = entries.filter { it.isTrap }
-        val BONUSES = entries.filter { it.isBonus }
+        // Only the exact 14 categories present in RULES screen (GlossaryEntry.ALL_ENTRIES)
+        val RULES_CATEGORIES = setOf(
+            BRIBERY, FRAUD, MONEY_LAUNDERING, DATA_BREACH, SYSTEMIC_CORRUPTION,
+            OFFICIAL_DOCUMENT, VERIFIED_APPROVAL, VALID_PARTNERSHIP, CERTIFICATION, VERIFIED_INVOICE,
+            FALSE_ALARM, UNVERIFIED_RUMOR, HONEST_MISTAKE,
+            SHIELD
+        )
+
+        val VIOLATIONS = entries.filter { it.isViolation && it in RULES_CATEGORIES && it != SYSTEMIC_CORRUPTION }
+        val ALL_VIOLATIONS = entries.filter { it.isViolation && it in RULES_CATEGORIES }
+        val LEGITIMATE = entries.filter { !it.isViolation && !it.isBonus && !it.isTrap && it in RULES_CATEGORIES }
+        val TRAPS = entries.filter { it.isTrap && it in RULES_CATEGORIES }
+        val BONUSES = entries.filter { it.isBonus && it in RULES_CATEGORIES }
     }
 
     val categoryTypeLabelRes: Int

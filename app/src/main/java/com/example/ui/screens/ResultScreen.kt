@@ -100,6 +100,7 @@ fun ResultScreen(
     elapsedSeconds: Float = 0f,
     currentLanguage: String = "en",
     onToggleLanguage: () -> Unit = {},
+    onOpenRules: () -> Unit = {},
     onPlayAgain: () -> Unit,
     onSelectLevel: () -> Unit,
     onReturnToMenu: () -> Unit,
@@ -123,9 +124,9 @@ fun ResultScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        // Fullscreen Background Artwork
+        // Fullscreen Background Artwork matching the mission played in GAMEPLAY
         Image(
-            painter = painterResource(id = R.drawable.bg_gameplay_screen),
+            painter = painterResource(id = level.backgroundRes),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -228,15 +229,15 @@ fun ResultScreen(
                                             )
                                         }
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        // Stars
+                                        // Stars (5 stars)
                                         Row {
-                                            for (i in 1..3) {
+                                            for (i in 1..5) {
                                                 val earned = i <= stars
                                                 Icon(
                                                     imageVector = if (earned) Icons.Default.Star else Icons.Default.StarBorder,
                                                     contentDescription = null,
                                                     tint = if (earned) Color(0xFFFFD54F) else Color(0x44FFFFFF),
-                                                    modifier = Modifier.size(20.dp)
+                                                    modifier = Modifier.size(18.dp)
                                                 )
                                             }
                                         }
@@ -437,33 +438,63 @@ fun ResultScreen(
                                     color = GoldSecondary
                                 )
 
-                                // Circular Language Toggle (EN / ID) matching Main Menu
-                                Box(
-                                    modifier = Modifier
-                                        .size(28.dp)
-                                        .clickable(onClick = onToggleLanguage)
-                                        .testTag("result_lang_btn"),
-                                    contentAlignment = Alignment.Center
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
+                                    // Circular Rules button ("?") matching size of EN/ID button
                                     Box(
                                         modifier = Modifier
-                                            .size(26.dp)
-                                            .clip(CircleShape)
-                                            .background(Color(0x44000000))
-                                            .border(1.2.dp, GoldSecondary.copy(alpha = 0.7f), CircleShape),
+                                            .size(28.dp)
+                                            .clickable(onClick = onOpenRules)
+                                            .testTag("result_rules_btn"),
                                         contentAlignment = Alignment.Center
                                     ) {
-                                        Crossfade(
-                                            targetState = currentLanguage,
-                                            animationSpec = tween(250),
-                                            label = "result_language_toggle_crossfade"
-                                        ) { lang ->
+                                        Box(
+                                            modifier = Modifier
+                                                .size(26.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0x44000000))
+                                                .border(1.2.dp, GoldSecondary.copy(alpha = 0.7f), CircleShape),
+                                            contentAlignment = Alignment.Center
+                                        ) {
                                             Text(
-                                                text = if (lang == "in" || lang == "id") "ID" else "EN",
+                                                text = "?",
                                                 color = GoldSecondary,
-                                                fontSize = 10.sp,
+                                                fontSize = 13.sp,
                                                 fontWeight = FontWeight.Black
                                             )
+                                        }
+                                    }
+
+                                    // Circular Language Toggle (EN / ID) matching Main Menu
+                                    Box(
+                                        modifier = Modifier
+                                            .size(28.dp)
+                                            .clickable(onClick = onToggleLanguage)
+                                            .testTag("result_lang_btn"),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(26.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0x44000000))
+                                                .border(1.2.dp, GoldSecondary.copy(alpha = 0.7f), CircleShape),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Crossfade(
+                                                targetState = currentLanguage,
+                                                animationSpec = tween(250),
+                                                label = "result_language_toggle_crossfade"
+                                            ) { lang ->
+                                                Text(
+                                                    text = if (lang == "in" || lang == "id") "ID" else "EN",
+                                                    color = GoldSecondary,
+                                                    fontSize = 10.sp,
+                                                    fontWeight = FontWeight.Black
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -511,12 +542,79 @@ fun ResultScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         item {
-                            Text(
-                                text = levelName,
-                                color = Color(0xFF90CAF9),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Black
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = levelName,
+                                    color = Color(0xFF90CAF9),
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Black
+                                )
+
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // Circular Rules button ("?") matching size of EN/ID button
+                                    Box(
+                                        modifier = Modifier
+                                            .size(28.dp)
+                                            .clickable(onClick = onOpenRules)
+                                            .testTag("result_rules_btn_portrait"),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(26.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0x44000000))
+                                                .border(1.2.dp, GoldSecondary.copy(alpha = 0.7f), CircleShape),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                text = "?",
+                                                color = GoldSecondary,
+                                                fontSize = 13.sp,
+                                                fontWeight = FontWeight.Black
+                                            )
+                                        }
+                                    }
+
+                                    // Circular Language Toggle (EN / ID) matching Main Menu
+                                    Box(
+                                        modifier = Modifier
+                                            .size(28.dp)
+                                            .clickable(onClick = onToggleLanguage)
+                                            .testTag("result_lang_btn_portrait"),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(26.dp)
+                                                .clip(CircleShape)
+                                                .background(Color(0x44000000))
+                                                .border(1.2.dp, GoldSecondary.copy(alpha = 0.7f), CircleShape),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Crossfade(
+                                                targetState = currentLanguage,
+                                                animationSpec = tween(250),
+                                                label = "result_language_toggle_crossfade_portrait"
+                                            ) { lang ->
+                                                Text(
+                                                    text = if (lang == "in" || lang == "id") "ID" else "EN",
+                                                    color = GoldSecondary,
+                                                    fontSize = 10.sp,
+                                                    fontWeight = FontWeight.Black
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             Spacer(modifier = Modifier.height(4.dp))
                             Surface(
                                 shape = RoundedCornerShape(8.dp),

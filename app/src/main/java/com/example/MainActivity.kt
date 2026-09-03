@@ -184,15 +184,15 @@ fun ComplianceSlicerApp(
             GamePhase.LEVEL_SELECT -> {
                 LevelSelectScreen(
                     userStats = uiState.userStats,
-                    onStartLevel = { level -> viewModel.startMission(level) },
-                    onOpenGlossary = { viewModel.navigateTo(GamePhase.GLOSSARY) },
+                    onStartLevel = { level, diff -> viewModel.startMission(level, diff) },
+                    onOpenGlossary = { viewModel.openGlossary() },
                     onBackToMenu = { viewModel.navigateTo(GamePhase.MENU) }
                 )
             }
 
             GamePhase.GLOSSARY -> {
                 IconGlossaryScreen(
-                    onBack = { viewModel.navigateTo(GamePhase.MENU) }
+                    onBack = { viewModel.closeGlossary() }
                 )
             }
 
@@ -228,7 +228,7 @@ fun ComplianceSlicerApp(
                 GameScreen(
                     viewModel = viewModel,
                     uiState = uiState,
-                    onOpenGlossary = { viewModel.navigateTo(GamePhase.GLOSSARY) },
+                    onOpenGlossary = { viewModel.openGlossary() },
                     onReturnToMenu = { viewModel.navigateTo(GamePhase.MENU) }
                 )
             }
@@ -248,6 +248,7 @@ fun ComplianceSlicerApp(
                     elapsedSeconds = uiState.timeRemaining,
                     currentLanguage = uiState.currentLanguage,
                     onToggleLanguage = { viewModel.toggleLanguage { activity?.recreate() } },
+                    onOpenRules = { viewModel.openGlossary() },
                     onPlayAgain = { viewModel.startMission(uiState.selectedLevel) },
                     onSelectLevel = { viewModel.navigateTo(GamePhase.LEVEL_SELECT) },
                     onReturnToMenu = { viewModel.navigateTo(GamePhase.MENU) }

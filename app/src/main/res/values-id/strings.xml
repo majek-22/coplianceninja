@@ -297,9 +297,36 @@
     <string name="briefing_best_score">Skor Terbaik</string>
     <string name="briefing_stars">Bintang</string>
     <string name="level_unlock_requirement">Selesaikan Misi %1$d untuk membuka</string>
+    <string name="level_2_unlock_req">Raih skor min. 1.200 di Level 1 untuk membuka Level 2</string>
+    <string name="level_3_unlock_req">Raih skor min. 2.500 di Level 2 untuk membuka Level 3</string>
+    <string name="level_boss_unlock_req">Raih skor min. 5.000 di Level 3 untuk membuka Level BOSS</string>
     <string name="level_unlock_short">Misi %1$d ★1</string>
     <string name="menu_footer_features">Tingkat Kesulitan Otomatis • Kombo hingga 4x • Sinkronisasi Cloud</string>
     <string name="splash_tap_to_skip">Ketuk di mana saja untuk lanjut</string>
     <string name="splash_content_desc">Layar Pembuka Bang Patuh Compliance Ninja</string>
     <string name="splash_corporate_desc">Tokio Marine Insurance Group - Presented by Digital Strategy PT Tokio Marine Indonesia</string>
+
+    <!-- Enhanced Rules & Mission UI Strings -->
+    <string name="rules_tab_all">Semua</string>
+    <string name="rules_tab_violations">Pelanggaran</string>
+    <string name="rules_tab_legitimate">Dokumen Sah</string>
+    <string name="rules_tab_traps">Jebakan</string>
+    <string name="rules_tab_bonus">Bonus</string>
+    <string name="rules_directive_slice_title">TEBAS</string>
+    <string name="rules_directive_slice_sub">+10 Poin × Kombo</string>
+    <string name="rules_directive_protect_title">LINDUNGI</string>
+    <string name="rules_directive_protect_sub">-1 Nyawa Penalti</string>
+    <string name="rules_directive_trap_title">HINDARI</string>
+    <string name="rules_directive_trap_sub">-10 Poin Penalti</string>
+    <string name="rules_directive_bonus_title">AMBIL</string>
+    <string name="rules_directive_bonus_sub">+1 Nyawa &amp; +25 Poin</string>
+    <string name="rules_ninja_tip_label">Tips Ninja Bang Patuh</string>
+    <string name="rules_tap_details_hint">Ketuk untuk inspeksi profil taktis</string>
+    <string name="mission_sector_label">SEKTOR %1$d</string>
+    <string name="mission_boss_badge">SEKTOR FINAL</string>
+    <string name="mission_targets_label">Target Ancaman</string>
+    <string name="mission_star_thresholds">Target Bintang</string>
+    <string name="mission_total_stars">Bintang</string>
+    <string name="mission_tap_to_deploy">START</string>
+    <string name="mission_select_prompt">Pilih sektor operasi investigasi</string>
 </resources>

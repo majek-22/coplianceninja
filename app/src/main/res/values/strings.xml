@@ -297,9 +297,36 @@
     <string name="briefing_best_score">Best Score</string>
     <string name="briefing_stars">Stars</string>
     <string name="level_unlock_requirement">Complete Mission %1$d to unlock</string>
+    <string name="level_2_unlock_req">Score min. 1,200 on Level 1 to unlock Level 2</string>
+    <string name="level_3_unlock_req">Score min. 2,500 on Level 2 to unlock Level 3</string>
+    <string name="level_boss_unlock_req">Score min. 5,000 on Level 3 to unlock BOSS Level</string>
     <string name="level_unlock_short">Mission %1$d ★1</string>
     <string name="menu_footer_features">Score-Based Difficulty • Combos up to 4x • Cloud Sync</string>
     <string name="splash_tap_to_skip">Tap anywhere to continue</string>
     <string name="splash_content_desc">Bang Patuh Compliance Ninja Flash Screen</string>
     <string name="splash_corporate_desc">Tokio Marine Insurance Group - Presented by Digital Strategy PT Tokio Marine Indonesia</string>
+
+    <!-- Enhanced Rules & Mission UI Strings -->
+    <string name="rules_tab_all">All</string>
+    <string name="rules_tab_violations">Violations</string>
+    <string name="rules_tab_legitimate">Official</string>
+    <string name="rules_tab_traps">Traps</string>
+    <string name="rules_tab_bonus">Bonus</string>
+    <string name="rules_directive_slice_title">SLICE</string>
+    <string name="rules_directive_slice_sub">+10 Pts × Combo</string>
+    <string name="rules_directive_protect_title">PROTECT</string>
+    <string name="rules_directive_protect_sub">-1 Life Penalty</string>
+    <string name="rules_directive_trap_title">AVOID</string>
+    <string name="rules_directive_trap_sub">-10 Pts Penalty</string>
+    <string name="rules_directive_bonus_title">COLLECT</string>
+    <string name="rules_directive_bonus_sub">+1 Life &amp; +25 Pts</string>
+    <string name="rules_ninja_tip_label">Bang Patuh Pro Tip</string>
+    <string name="rules_tap_details_hint">Tap to inspect tactical profile</string>
+    <string name="mission_sector_label">SECTOR %1$d</string>
+    <string name="mission_boss_badge">FINAL SECTOR</string>
+    <string name="mission_targets_label">Target Violations</string>
+    <string name="mission_star_thresholds">Star Targets</string>
+    <string name="mission_total_stars">Stars</string>
+    <string name="mission_tap_to_deploy">START</string>
+    <string name="mission_select_prompt">Select an operational sector</string>
 </resources>
